@@ -1,0 +1,17 @@
+<svg width="1080" height="1920" viewBox="0 0 1080 1920" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1080" height="1920" fill="url(#gradient0_linear_1_1)"/>
+<circle cx="540" cy="800" r="120" fill="white" fill-opacity="0.9"/>
+<path d="M540 680C520.336 680 504 696.336 504 716V704C492.954 704 484 712.954 484 724V772C484 783.046 492.954 792 504 792H576C587.046 792 596 783.046 596 772V724C596 712.954 587.046 704 576 704V716C576 696.336 559.664 680 540 680Z" fill="#847EFF"/>
+<path d="M540 692C527.85 692 518 701.85 518 714V704C518 691.85 527.85 682 540 682C552.15 682 562 691.85 562 704V730C562 716.15 562 706.15 552.15 706.15H540Z" fill="#6347F7"/>
+<text x="540" y="740" text-anchor="middle" fill="#6B4684" font-family="Arial" font-size="36" font-weight="bold">NOR</text>
+<text x="540" y="780" text-anchor="middle" fill="#6B4684" font-family="Arial" font-size="24" font-weight="bold">LEARN</text>
+<text x="540" y="1100" text-anchor="middle" fill="white" font-family="Arial" font-size="48" font-weight="bold">Norwegian Vocabulary</text>
+<text x="540" y="1150" text-anchor="middle" fill="white" font-family="Arial" font-size="32" font-weight="normal">Learn Norwegian with flashcards</text>
+<text x="540" y="1200" text-anchor="middle" fill="white" font-family="Arial" font-size="32" font-weight="normal">and pronunciation</text>
+<defs>
+<linearGradient id="gradient0_linear_1_1" x1="0" y1="0" x2="1080" y2="1920" gradientUnits="userSpaceOnUse">
+<stop stop-color="#847EFF"/>
+<stop offset="1" stop-color="#6347F7"/>
+</linearGradient>
+</defs>
+</svg>

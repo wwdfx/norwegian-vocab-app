@@ -1,13 +1,394 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles for the Norwegian Vocabulary App */
+@layer base {
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+@layer components {
+  /* Flashcard flip animation */
+  .rotate-y-180 {
+    transform: rotateY(180deg);
+  }
+  
+  /* Custom scrollbar */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+  }
+  
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+}
+
+@layer utilities {
+  /* Gradient text */
+  .text-gradient {
+    @apply bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent;
+  }
+  
+  /* Card hover effects */
+  .card-hover {
+    @apply transform transition-all duration-200 hover:-translate-y-1 hover:shadow-lg;
+  }
+  
+  /* Button animations */
+  .btn-animate {
+    @apply transform transition-all duration-200 hover:-translate-y-1 active:translate-y-0;
+  }
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Flashcard 3D effect */
+.flashcard-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+
+.flashcard-3d.flipped {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+  backface-visibility: hidden;
+}
+
+.flashcard-back {
+  transform: rotateY(180deg);
+}
+
+/* Responsive design improvements */
+@media (max-width: 640px) {
+  .mobile-padding {
+    @apply px-4;
+  }
+  
+  .mobile-text {
+    @apply text-sm;
+  }
+}
+
+/* Norwegian word highlighting in news articles */
+.norwegian-word {
+  cursor: pointer;
+  color: #7c3aed;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  transition: all 0.2s ease;
+}
+
+.norwegian-word:hover {
+  color: #5b21b6;
+  text-decoration-style: solid;
+  background-color: #f3e8ff;
+  border-radius: 2px;
+  padding: 1px 2px;
+}
+
+/* Smart tooltip positioning */
+.norwegian-word-tooltip {
+  position: fixed !important;
+  z-index: 9999 !important;
+  max-width: 320px !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+  border-radius: 8px !important;
+  background: white !important;
+  border: 1px solid #e5e7eb !important;
+  padding: 16px !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+  transition: opacity 0.2s ease-in-out !important;
+}
+
+/* Ensure tooltips don't overflow viewport */
+.norwegian-word-tooltip {
+  overflow: hidden !important;
+  word-wrap: break-word !important;
+}
+
+/* Mobile-specific tooltip improvements */
+@media (max-width: 640px) {
+  .norwegian-word-tooltip {
+    max-width: 280px !important;
+    font-size: 13px !important;
+    padding: 12px !important;
+  }
+}
+
+/* Mobile bottom navigation */
+@media (max-width: 768px) {
+  /* Ensure content doesn't get hidden behind bottom nav */
+  body {
+    padding-bottom: 80px;
+  }
+}
+
+/* Bottom navigation animations */
+@keyframes slideUpFromBottom {
+  from {
+    transform: translateY(100%) scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDownToBottom {
+  from {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%) scale(0.8);
+    opacity: 0;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    transform: translateY(20px) scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes rotateChevron {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(180deg);
+  }
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: scale(0.3) translateY(50px);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05) translateY(-5px);
+  }
+  70% {
+    transform: scale(0.9) translateY(0);
+  }
+  100% {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromBottom {
+  0% {
+    transform: translateY(100%) scale(0.8) rotateX(15deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) scale(1) rotateX(0deg);
+    opacity: 1;
+  }
+}
+
+/* Smooth transitions for bottom navigation */
+.bottom-nav-enter {
+  animation: slideUpFromBottom 0.5s ease-out forwards;
+}
+
+.bottom-nav-exit {
+  animation: slideDownToBottom 0.5s ease-out forwards;
+}
+
+.grid-item-enter {
+  animation: fadeInUp 0.3s ease-out forwards;
+}
+
+/* Tooltip button improvements */
+.norwegian-word-tooltip button {
+  transition: all 0.2s ease !important;
+  font-weight: 500 !important;
+}
+
+.norwegian-word-tooltip button:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Translation text styling */
+.norwegian-word-tooltip .translation-text {
+  color: #6b7280 !important;
+  font-style: italic !important;
+  margin-bottom: 12px !important;
+  padding: 8px !important;
+  background-color: #f9fafb !important;
+  border-radius: 6px !important;
+  border-left: 3px solid #8b5cf6 !important;
+}
+
+/* Chat interface improvements */
+.chat-message {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.chat-input:focus {
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.1);
+}
+
+/* Typing indicator animation */
+.typing-dot {
+  animation: typingBounce 1.4s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(1) { animation-delay: -0.32s; }
+.typing-dot:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes typingBounce {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 640px) {
+  /* Improve touch targets */
+  button, input, select, textarea {
+    min-height: 44px;
+  }
+  
+  /* Better spacing for mobile */
+  .mobile-spacing {
+    @apply space-y-3;
+  }
+  
+  /* Improve text readability */
+  body {
+    -webkit-text-size-adjust: 100%;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Extra small screens (phones in portrait) */
+@media (max-width: 480px) {
+  .xs\:hidden {
+    display: none;
+  }
+  
+  .xs\:inline {
+    display: inline;
+  }
+}
+
+/* Focus styles for accessibility */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2;
+}
+
+/* Custom animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* PWA Install Prompt Animations */
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+/* PWA Status Bar Styling */
+@media (display-mode: standalone) {
+  body {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}
+
+/* PWA Splash Screen Styling */
+@media (display-mode: standalone) {
+  .pwa-splash {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #7c3aed 0%, #3b82f6 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    color: white;
+  }
 }

@@ -1,0 +1,501 @@
+{
+  "chapters": [
+    {
+      "id": "chapter_001",
+      "title": "Basic Greetings & Introductions",
+      "description": "Learn essential greetings and how to introduce yourself in Norwegian",
+      "level": 1,
+      "theme": "greetings",
+      "icon": "👋",
+      "color": "bg-blue-500",
+      "lessons": [
+        {
+          "id": "lesson_001",
+          "title": "Hello & Goodbye",
+          "description": "Essential greetings for any time of day",
+          "xp_reward": 15,
+          "exercises": [
+            {
+              "id": "ex_001_01",
+              "type": "multiple_choice",
+              "question": "How do you say 'Hello' in Norwegian?",
+              "options": ["Hei", "Takk", "Ja", "Nei"],
+              "correct": "Hei",
+              "explanation": "Hei is the most common and informal way to say hello in Norwegian",
+              "tts_text": "Hei"
+            },
+            {
+              "id": "ex_001_02",
+              "type": "multiple_choice",
+              "question": "What does 'God morgen' mean?",
+              "options": ["Good evening", "Good morning", "Good night", "Good afternoon"],
+              "correct": "Good morning",
+              "explanation": "God morgen literally means 'good morning' in Norwegian",
+              "tts_text": "God morgen"
+            },
+            {
+              "id": "ex_001_03",
+              "type": "fill_blanks",
+              "question": "Complete: 'God ___' (Good evening)",
+              "answer": "kveld",
+              "explanation": "God kveld means 'good evening' in Norwegian",
+              "tts_text": "God kveld"
+            }
+          ],
+          "vocabulary": [
+            {
+              "norwegian": "Hei",
+              "english": "Hello",
+              "pronunciation": "hæi",
+              "example": "Hei! Hvordan går det?"
+            },
+            {
+              "norwegian": "God morgen",
+              "english": "Good morning",
+              "pronunciation": "gu morgen",
+              "example": "God morgen! God dag!"
+            },
+            {
+              "norwegian": "God dag",
+              "english": "Good day",
+              "pronunciation": "gu dag",
+              "example": "God dag! Hyggelig å møte deg."
+            },
+            {
+              "norwegian": "God kveld",
+              "english": "Good evening",
+              "pronunciation": "gu kveld",
+              "example": "God kveld! God natt!"
+            },
+            {
+              "norwegian": "Ha det",
+              "english": "Goodbye",
+              "pronunciation": "ha de",
+              "example": "Ha det! Vi snakkes!"
+            }
+          ]
+        },
+        {
+          "id": "lesson_002",
+          "title": "Introducing Yourself",
+          "description": "Learn how to tell people your name and ask theirs",
+          "xp_reward": 20,
+          "exercises": [
+            {
+              "id": "ex_002_01",
+              "type": "multiple_choice",
+              "question": "How do you say 'My name is' in Norwegian?",
+              "options": ["Jeg heter", "Jeg er", "Jeg har", "Jeg kan"],
+              "correct": "Jeg heter",
+              "explanation": "Jeg heter literally means 'I am called' and is used to introduce yourself",
+              "tts_text": "Jeg heter"
+            },
+            {
+              "id": "ex_002_02",
+              "type": "translation",
+              "question": "Translate: 'What is your name?'",
+              "norwegian": "Hva heter du?",
+              "english": "What is your name?",
+              "explanation": "Hva heter du? is the standard way to ask someone's name in Norwegian",
+              "tts_text": "Hva heter du?"
+            },
+            {
+              "id": "ex_002_03",
+              "type": "word_order",
+              "question": "Arrange the words to say 'Nice to meet you'",
+              "words": ["Hyggelig", "å", "møte", "deg"],
+              "correct_order": ["Hyggelig", "å", "møte", "deg"],
+              "explanation": "Hyggelig å møte deg means 'Nice to meet you' in Norwegian",
+              "tts_text": "Hyggelig å møte deg"
+            }
+          ],
+          "vocabulary": [
+            {
+              "norwegian": "Jeg heter",
+              "english": "My name is",
+              "pronunciation": "jæi heter",
+              "example": "Jeg heter Maria."
+            },
+            {
+              "norwegian": "Hva heter du?",
+              "english": "What is your name?",
+              "pronunciation": "va heter du",
+              "example": "Hva heter du? Jeg heter Ole."
+            },
+            {
+              "norwegian": "Hyggelig å møte deg",
+              "english": "Nice to meet you",
+              "pronunciation": "hyggeli å møte dei",
+              "example": "Hyggelig å møte deg!"
+            },
+            {
+              "norwegian": "Hvor kommer du fra?",
+              "english": "Where are you from?",
+              "pronunciation": "vor kommer du fra",
+              "example": "Hvor kommer du fra? Jeg kommer fra Norge."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chapter_002",
+      "title": "Numbers & Colors",
+      "description": "Master basic numbers and learn essential colors in Norwegian",
+      "level": 1,
+      "theme": "basics",
+      "icon": "🎨",
+      "color": "bg-green-500",
+      "lessons": [
+        {
+          "id": "lesson_003",
+          "title": "Numbers 1-20",
+          "description": "Learn to count from one to twenty in Norwegian",
+          "xp_reward": 25,
+          "exercises": [
+            {
+              "id": "ex_003_01",
+              "type": "multiple_choice",
+              "question": "What is the Norwegian word for 'five'?",
+              "options": ["Fem", "Fire", "Seks", "Syv"],
+              "correct": "Fem",
+              "explanation": "Fem means 'five' in Norwegian",
+              "tts_text": "Fem"
+            },
+            {
+              "id": "ex_003_02",
+              "type": "fill_blanks",
+              "question": "Complete: 'Tretti' means ___ in English",
+              "answer": "thirty",
+              "explanation": "Tretti is the Norwegian word for thirty",
+              "tts_text": "Tretti"
+            },
+            {
+              "id": "ex_003_03",
+              "type": "sequence",
+              "question": "Arrange the numbers in order: fem, fire, seks",
+              "correct_order": ["fire", "fem", "seks"],
+              "explanation": "The correct order is: fire (4), fem (5), seks (6)",
+              "tts_text": "fire, fem, seks"
+            }
+          ],
+          "vocabulary": [
+            {
+              "norwegian": "En",
+              "english": "One",
+              "pronunciation": "en",
+              "example": "Jeg har en bil."
+            },
+            {
+              "norwegian": "To",
+              "english": "Two",
+              "pronunciation": "tu",
+              "example": "Jeg har to katter."
+            },
+            {
+              "norwegian": "Tre",
+              "english": "Three",
+              "pronunciation": "tre",
+              "example": "Jeg har tre bøker."
+            },
+            {
+              "norwegian": "Fire",
+              "english": "Four",
+              "pronunciation": "fire",
+              "example": "Jeg har fire epler."
+            },
+            {
+              "norwegian": "Fem",
+              "english": "Five",
+              "pronunciation": "fem",
+              "example": "Jeg har fem fingre."
+            }
+          ]
+        },
+        {
+          "id": "lesson_004",
+          "title": "Basic Colors",
+          "description": "Learn essential colors and how to describe objects",
+          "xp_reward": 20,
+          "exercises": [
+            {
+              "id": "ex_004_01",
+              "type": "multiple_choice",
+              "question": "What color is 'blå'?",
+              "options": ["Red", "Blue", "Green", "Yellow"],
+              "correct": "Blue",
+              "explanation": "Blå means 'blue' in Norwegian",
+              "tts_text": "Blå"
+            },
+            {
+              "id": "ex_004_02",
+              "type": "matching",
+              "question": "Match the Norwegian color with its English meaning",
+              "pairs": [
+                {"norwegian": "Rød", "english": "Red"},
+                {"norwegian": "Grønn", "english": "Green"},
+                {"norwegian": "Gul", "english": "Yellow"}
+              ],
+              "explanation": "These are the primary colors in Norwegian",
+              "tts_text": "Rød, Grønn, Gul"
+            }
+          ],
+          "vocabulary": [
+            {
+              "norwegian": "Rød",
+              "english": "Red",
+              "pronunciation": "rø",
+              "example": "Bilen er rød."
+            },
+            {
+              "norwegian": "Blå",
+              "english": "Blue",
+              "pronunciation": "blå",
+              "example": "Himmelen er blå."
+            },
+            {
+              "norwegian": "Grønn",
+              "english": "Green",
+              "pronunciation": "grønn",
+              "example": "Gresset er grønt."
+            },
+            {
+              "norwegian": "Gul",
+              "english": "Yellow",
+              "pronunciation": "gul",
+              "example": "Solen er gul."
+            },
+            {
+              "norwegian": "Svart",
+              "english": "Black",
+              "pronunciation": "svart",
+              "example": "Natten er svart."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chapter_003",
+      "title": "Family Members",
+      "description": "Learn vocabulary for family relationships and descriptions",
+      "level": 2,
+      "theme": "family",
+      "icon": "👨‍👩‍👧‍👦",
+      "color": "bg-purple-500",
+      "lessons": [
+        {
+          "id": "lesson_005",
+          "title": "Immediate Family",
+          "description": "Learn words for your closest family members",
+          "xp_reward": 25,
+          "exercises": [
+            {
+              "id": "ex_005_01",
+              "type": "multiple_choice",
+              "question": "What is the Norwegian word for 'mother'?",
+              "options": ["Far", "Mor", "Søster", "Bror"],
+              "correct": "Mor",
+              "explanation": "Mor means 'mother' in Norwegian",
+              "tts_text": "Mor"
+            },
+            {
+              "id": "ex_005_02",
+              "type": "fill_blanks",
+              "question": "Complete: 'Min ___ er stor' (My father is tall)",
+              "answer": "far",
+              "explanation": "Far means 'father' in Norwegian",
+              "tts_text": "Far"
+            }
+          ],
+          "vocabulary": [
+            {
+              "norwegian": "Mor",
+              "english": "Mother",
+              "pronunciation": "mor",
+              "example": "Min mor er snill."
+            },
+            {
+              "norwegian": "Far",
+              "english": "Father",
+              "pronunciation": "far",
+              "example": "Min far er sterk."
+            },
+            {
+              "norwegian": "Søster",
+              "english": "Sister",
+              "pronunciation": "søster",
+              "example": "Jeg har en søster."
+            },
+            {
+              "norwegian": "Bror",
+              "english": "Brother",
+              "pronunciation": "bror",
+              "example": "Jeg har en bror."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chapter_004",
+      "title": "Food & Drinks",
+      "description": "Essential vocabulary for eating, drinking, and ordering food",
+      "level": 2,
+      "theme": "food",
+      "icon": "🍽️",
+      "color": "bg-orange-500",
+      "lessons": [
+        {
+          "id": "lesson_006",
+          "title": "Basic Foods",
+          "description": "Learn common food items and how to order",
+          "xp_reward": 30,
+          "exercises": [
+            {
+              "id": "ex_006_01",
+              "type": "multiple_choice",
+              "question": "What is 'brød' in English?",
+              "options": ["Bread", "Butter", "Cheese", "Milk"],
+              "correct": "Bread",
+              "explanation": "Brød means 'bread' in Norwegian",
+              "tts_text": "Brød"
+            },
+            {
+              "id": "ex_006_02",
+              "type": "translation",
+              "question": "Translate: 'Jeg vil ha vann'",
+              "norwegian": "Jeg vil ha vann",
+              "english": "I want water",
+              "explanation": "Jeg vil ha means 'I want' and vann means 'water'",
+              "tts_text": "Jeg vil ha vann"
+            }
+          ],
+          "vocabulary": [
+            {
+              "norwegian": "Brød",
+              "english": "Bread",
+              "pronunciation": "brø",
+              "example": "Jeg spiser brød til frokost."
+            },
+            {
+              "norwegian": "Vann",
+              "english": "Water",
+              "pronunciation": "van",
+              "example": "Jeg vil ha vann, takk."
+            },
+            {
+              "norwegian": "Kaffe",
+              "english": "Coffee",
+              "pronunciation": "kaffe",
+              "example": "Jeg drikker kaffe om morgenen."
+            },
+            {
+              "norwegian": "Te",
+              "english": "Tea",
+              "pronunciation": "te",
+              "example": "Jeg liker te bedre enn kaffe."
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "chapter_005",
+      "title": "Basic Verbs",
+      "description": "Master essential verbs for everyday communication",
+      "level": 2,
+      "theme": "grammar",
+      "icon": "🏃",
+      "color": "bg-red-500",
+      "lessons": [
+        {
+          "id": "lesson_007",
+          "title": "To Be & To Have",
+          "description": "Learn the most important verbs in Norwegian",
+          "xp_reward": 35,
+          "exercises": [
+            {
+              "id": "ex_007_01",
+              "type": "multiple_choice",
+              "question": "What is the correct form: 'Jeg ___ student' (I am a student)?",
+              "options": ["har", "er", "kan", "vil"],
+              "correct": "er",
+              "explanation": "Er is the present tense of 'to be' (å være) in Norwegian",
+              "tts_text": "Jeg er"
+            },
+            {
+              "id": "ex_007_02",
+              "type": "fill_blanks",
+              "question": "Complete: 'Jeg ___ en bil' (I have a car)",
+              "answer": "har",
+              "explanation": "Har is the present tense of 'to have' (å ha) in Norwegian",
+              "tts_text": "Jeg har"
+            },
+            {
+              "id": "ex_007_03",
+              "type": "conjugation",
+              "question": "Conjugate 'å være' (to be) for 'du' (you)",
+              "correct": "er",
+              "explanation": "Du er means 'you are' in Norwegian",
+              "tts_text": "Du er"
+            }
+          ],
+          "vocabulary": [
+            {
+              "norwegian": "Å være",
+              "english": "To be",
+              "pronunciation": "å være",
+              "conjugation": {
+                "jeg": "er",
+                "du": "er",
+                "han/hun": "er",
+                "vi": "er",
+                "dere": "er",
+                "de": "er"
+              },
+              "example": "Jeg er student."
+            },
+            {
+              "norwegian": "Å ha",
+              "english": "To have",
+              "pronunciation": "å ha",
+              "conjugation": {
+                "jeg": "har",
+                "du": "har",
+                "han/hun": "har",
+                "vi": "har",
+                "dere": "har",
+                "de": "har"
+              },
+              "example": "Jeg har en bok."
+            },
+            {
+              "norwegian": "Å gå",
+              "english": "To go/walk",
+              "pronunciation": "å gå",
+              "conjugation": {
+                "jeg": "går",
+                "du": "går",
+                "han/hun": "går",
+                "vi": "går",
+                "dere": "går",
+                "de": "går"
+              },
+              "example": "Jeg går til skolen."
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "total_chapters": 5,
+    "total_lessons": 7,
+    "total_exercises": 21,
+    "total_vocabulary": 35,
+    "max_level": 2,
+    "last_updated": "2024-01-01"
+  }
+}
