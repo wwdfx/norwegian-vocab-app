@@ -2,11 +2,13 @@ import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
 import ttsService from '../services/tts';
 import translationService from '../services/translation';
-import { Plus, Volume2, Trash2, X, Loader2, Sparkles, Download, Upload, FileText } from 'lucide-react';
+import { Plus, Volume2, Trash2, X, Loader2, Sparkles, Download, Upload, FileText, BookOpen } from 'lucide-react';
 import WordTooltip from './WordTooltip';
+import WordSets from './WordSets';
 
 const WordManagement = () => {
   const { words, addWord, deleteWord, isLoading } = useApp();
+  const [activeTab, setActiveTab] = useState('my-words'); // 'my-words' or 'word-sets'
   const [showAddForm, setShowAddForm] = useState(false);
   const [formData, setFormData] = useState({
     norwegian: '',
@@ -362,6 +364,11 @@ const WordManagement = () => {
     reader.readAsText(file);
   };
 
+  // If word sets tab is active, render WordSets component
+  if (activeTab === 'word-sets') {
+    return <WordSets onBack={() => setActiveTab('my-words')} />;
+  }
+
   return (
     <div className="max-w-4xl mx-auto">
       {/* Header */}
@@ -408,6 +415,38 @@ const WordManagement = () => {
           >
             <Plus size={20} />
             <span>Add Word</span>
+          </button>
+        </div>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="bg-white border-b border-gray-200 mb-6">
+        <div className="flex space-x-8">
+          <button
+            onClick={() => setActiveTab('my-words')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === 'my-words'
+                ? 'border-purple-500 text-purple-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <Plus size={16} />
+              <span>My Words ({words.length})</span>
+            </div>
+          </button>
+          <button
+            onClick={() => setActiveTab('word-sets')}
+            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+              activeTab === 'word-sets'
+                ? 'border-purple-500 text-purple-600'
+                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+            }`}
+          >
+            <div className="flex items-center space-x-2">
+              <BookOpen size={16} />
+              <span>Word Sets</span>
+            </div>
           </button>
         </div>
       </div>

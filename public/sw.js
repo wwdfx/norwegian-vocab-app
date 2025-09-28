@@ -22,6 +22,18 @@ self.addEventListener('install', (event) => {
 
 // Fetch event - serve from cache when offline
 self.addEventListener('fetch', (event) => {
+  // Skip caching for RSS feeds and CORS proxies to avoid conflicts
+  if (event.request.url.includes('nrk.no') || 
+      event.request.url.includes('allorigins') ||
+      event.request.url.includes('cors-anywhere') ||
+      event.request.url.includes('thingproxy') ||
+      event.request.url.includes('codetabs') ||
+      event.request.url.includes('feeds.nrk.no') ||
+      event.request.url.includes('_cb=')) {
+    // Let these requests go directly to network without caching
+    return;
+  }
+  
   event.respondWith(
     caches.match(event.request)
       .then((response) => {

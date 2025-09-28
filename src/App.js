@@ -11,6 +11,7 @@ import WordManagement from './components/WordManagement';
 import News from './components/News';
 import Chat from './components/Chat';
 import LearningPathway from './components/LearningPathway';
+import Alphabet from './components/Alphabet';
 import ServiceInitializer from './components/ServiceInitializer';
 import PWAServiceWorker from './components/PWAServiceWorker';
 
@@ -43,6 +44,8 @@ function AppContent() {
         return <WordManagement />;
       case 'learning':
         return <LearningPathway />;
+      case 'alphabet':
+        return <Alphabet />;
       case 'news':
         return <News />;
       case 'chat':

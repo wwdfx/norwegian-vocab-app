@@ -26,13 +26,14 @@ const Chat = () => {
   const [isListening, setIsListening] = useState(false);
   const [autoSpeak, setAutoSpeak] = useState(true);
   const [conversationContext, setConversationContext] = useState('');
+  const [isSpeaking, setIsSpeaking] = useState(false);
   
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
 
   // Gemini API configuration
-  const GEMINI_API_KEY = 'AIzaSyBTuAG_3kHt3gLy4eK0b9y-gaoXNXd03xU';
-  const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+  const GEMINI_API_KEY = 'AIzaSyCiJ-bByf2slG63k6-l8eUD37A4xLGppgY';
+  const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
 
   // Conversation starters for Norwegian practice
   const conversationStarters = [
@@ -210,12 +211,20 @@ const Chat = () => {
     }
   };
 
-  // Speak AI message
+  // Speak AI message with duplicate prevention
   const speakMessage = async (text, language = 'nb-NO') => {
+    if (isSpeaking) {
+      console.log('TTS already playing, skipping duplicate call');
+      return;
+    }
+    
     try {
+      setIsSpeaking(true);
       await ttsService.speak(text, language);
     } catch (error) {
       console.error('TTS Error:', error);
+    } finally {
+      setIsSpeaking(false);
     }
   };
 
@@ -525,10 +534,23 @@ const Chat = () => {
                 autoSpeak 
                   ? 'bg-green-100 text-green-600 hover:bg-green-200' 
                   : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-              }`}
-              title={autoSpeak ? 'Auto-speak enabled' : 'Auto-speak disabled'}
+              } ${isSpeaking ? 'opacity-50 cursor-not-allowed' : ''}`}
+              disabled={isSpeaking}
+              title={
+                isSpeaking 
+                  ? 'Currently playing audio' 
+                  : autoSpeak 
+                    ? 'Auto-speak enabled' 
+                    : 'Auto-speak disabled'
+              }
             >
-              {autoSpeak ? <Volume2 size={16} /> : <MicOff size={16} />}
+              {isSpeaking ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : autoSpeak ? (
+                <Volume2 size={16} />
+              ) : (
+                <MicOff size={16} />
+              )}
             </button>
             
             <button
@@ -595,8 +617,13 @@ const Chat = () => {
                 <div className="flex items-center justify-end mt-2 space-x-2">
                   <button
                     onClick={() => speakMessage(message.content, 'nb-NO')}
-                    className="p-1 text-gray-500 hover:text-purple-600 transition-colors rounded"
-                    title="Listen to message"
+                    disabled={isSpeaking}
+                    className={`p-1 transition-colors rounded ${
+                      isSpeaking 
+                        ? 'text-purple-600 cursor-not-allowed' 
+                        : 'text-gray-500 hover:text-purple-600'
+                    }`}
+                    title={isSpeaking ? "Currently playing" : "Listen to message"}
                   >
                     <Volume2 size={14} />
                   </button>

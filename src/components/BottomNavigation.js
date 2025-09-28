@@ -9,7 +9,8 @@ import {
   Plus,
   MessageCircle,
   LayoutDashboard,
-  GraduationCap
+  GraduationCap,
+  Type
 } from 'lucide-react';
 
 const BottomNavigation = ({ currentScreen, onNavigate }) => {
@@ -18,6 +19,7 @@ const BottomNavigation = ({ currentScreen, onNavigate }) => {
   const navigationItems = [
     { id: 'search', label: 'Search', icon: Search },
     { id: 'learning', label: 'Learning', icon: GraduationCap },
+    { id: 'alphabet', label: 'Alphabet', icon: Type },
     { id: 'flashcards', label: 'Flashcards', icon: BookOpen },
     { id: 'practice', label: 'Practice', icon: Target },
     { id: 'news', label: 'News', icon: Newspaper },

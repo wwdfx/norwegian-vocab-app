@@ -3,15 +3,30 @@ class TTSService {
   constructor() {
     this.isSupported = 'speechSynthesis' in window;
     this.googleApiKey = 'AIzaSyDV4AhwF5mAfs2F4Zi0jZAS3lebGew2N8o'; // Cloud Translation/TTS API key
+    this.isSpeaking = false;
+    this.currentAudio = null;
   }
 
   async speak(text, languageCode = 'nb-NO') {
-    // Try Google Cloud TTS first, fallback to browser TTS
+    // Prevent overlapping TTS calls
+    if (this.isSpeaking) {
+      console.log('TTS already playing, stopping current playback');
+      this.stop();
+    }
+
+    this.isSpeaking = true;
+    
     try {
-      await this.speakWithGoogleTTS(text);
-    } catch (error) {
-      console.warn('Google TTS failed, falling back to browser TTS:', error);
-      await this.speakWithBrowserTTS(text, languageCode);
+      // Try Google Cloud TTS first, fallback to browser TTS
+      try {
+        await this.speakWithGoogleTTS(text);
+      } catch (error) {
+        console.warn('Google TTS failed, falling back to browser TTS:', error);
+        await this.speakWithBrowserTTS(text, languageCode);
+      }
+    } finally {
+      this.isSpeaking = false;
+      this.currentAudio = null;
     }
   }
 
@@ -62,13 +77,18 @@ class TTSService {
       
       const audioUrl = URL.createObjectURL(audioBlob);
       const audio = new Audio(audioUrl);
+      this.currentAudio = audio;
       
       return new Promise((resolve, reject) => {
         audio.onended = () => {
           URL.revokeObjectURL(audioUrl);
+          this.currentAudio = null;
           resolve();
         };
-        audio.onerror = reject;
+        audio.onerror = (error) => {
+          this.currentAudio = null;
+          reject(error);
+        };
         audio.play();
       });
     } else {
@@ -91,8 +111,12 @@ class TTSService {
       utterance.pitch = 0.9; // Slightly lower pitch for more natural sound
       utterance.volume = 1.0;
       
-      utterance.onend = resolve;
-      utterance.onerror = reject;
+      utterance.onend = () => {
+        resolve();
+      };
+      utterance.onerror = (error) => {
+        reject(error);
+      };
 
       // Wait for voices to load if they haven't loaded yet
       const speakWithVoice = () => {
@@ -198,6 +222,23 @@ class TTSService {
     } else {
       console.log('No Norwegian voices found');
     }
+  }
+
+  // Stop current TTS playback
+  stop() {
+    // Stop Google TTS audio if playing
+    if (this.currentAudio) {
+      this.currentAudio.pause();
+      this.currentAudio.currentTime = 0;
+      this.currentAudio = null;
+    }
+    
+    // Stop browser TTS if playing
+    if (this.isSupported && speechSynthesis.speaking) {
+      speechSynthesis.cancel();
+    }
+    
+    this.isSpeaking = false;
   }
 
   // Check if Google TTS API is properly configured

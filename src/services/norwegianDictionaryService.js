@@ -221,7 +221,7 @@ class NorwegianDictionaryService {
       
       Format: Return only the examples, one per line, in Norwegian.`;
       
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.REACT_APP_GEMINI_API_KEY || 'AIzaSyDV4AhwF5mAfs2F4Zi0jZAS3lebGew2N8o'}`, {
+      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${process.env.REACT_APP_GEMINI_API_KEY || 'AIzaSyCiJ-bByf2slG63k6-l8eUD37A4xLGppgY'}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

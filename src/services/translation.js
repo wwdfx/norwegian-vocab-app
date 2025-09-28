@@ -1,7 +1,7 @@
 // Translation and AI service for Norwegian Vocabulary App
 class TranslationService {
   constructor() {
-    this.geminiApiKey = 'AIzaSyBTuAG_3kHt3gLy4eK0b9y-gaoXNXd03xU';
+    this.geminiApiKey = 'AIzaSyCiJ-bByf2slG63k6-l8eUD37A4xLGppgY';
     this.translationApiKey = 'AIzaSyDV4AhwF5mAfs2F4Zi0jZAS3lebGew2N8o'; // Cloud Translation API key
   }
 
@@ -54,7 +54,7 @@ class TranslationService {
 Word: ${norwegianWord}`;
 
       const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${this.geminiApiKey}`,
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${this.geminiApiKey}`,
         {
           method: 'POST',
           headers: {

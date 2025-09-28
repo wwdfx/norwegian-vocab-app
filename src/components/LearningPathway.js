@@ -10,7 +10,8 @@ import {
   Target,
   Zap,
   Calendar,
-  Award
+  Award,
+  X
 } from 'lucide-react';
 import gamificationService from '../services/gamificationService';
 import lessonData from '../data/lessons.json';
@@ -370,44 +371,606 @@ const LearningPathway = () => {
   );
 };
 
-// Lesson Modal Component (placeholder - will be implemented next)
+// Interactive Lesson Modal Component
 const LessonModal = ({ lesson, onComplete, onClose }) => {
+  const [currentExerciseIndex, setCurrentExerciseIndex] = useState(0);
+  const [userAnswers, setUserAnswers] = useState({});
+  const [exerciseResults, setExerciseResults] = useState({});
+  const [showVocabulary, setShowVocabulary] = useState(false);
+  const [currentSection, setCurrentSection] = useState('exercises'); // 'exercises' or 'vocabulary'
+  const [lessonCompleted, setLessonCompleted] = useState(false);
+  const [score, setScore] = useState(0);
+
+  const currentExercise = lesson.exercises[currentExerciseIndex];
+  const totalExercises = lesson.exercises.length;
+  const progress = ((currentExerciseIndex + 1) / totalExercises) * 100;
+
+  // Handle exercise submission
+  const handleExerciseSubmit = (exerciseId, answer, isCorrect) => {
+    setUserAnswers(prev => ({ ...prev, [exerciseId]: answer }));
+    setExerciseResults(prev => ({ ...prev, [exerciseId]: isCorrect }));
+    
+    if (isCorrect) {
+      setScore(prev => prev + 1);
+    }
+
+    // Auto-advance after a short delay
+    setTimeout(() => {
+      if (currentExerciseIndex < totalExercises - 1) {
+        setCurrentExerciseIndex(prev => prev + 1);
+      } else {
+        // All exercises completed
+        setCurrentSection('vocabulary');
+        setShowVocabulary(true);
+      }
+    }, 1500);
+  };
+
+  // Handle lesson completion
+  const handleLessonComplete = () => {
+    const accuracy = Math.round((score / totalExercises) * 100);
+    const xpEarned = Math.round((accuracy / 100) * lesson.xp_reward);
+    onComplete(lesson.id, xpEarned, accuracy);
+  };
+
+  // Reset lesson
+  const handleResetLesson = () => {
+    setCurrentExerciseIndex(0);
+    setUserAnswers({});
+    setExerciseResults({});
+    setShowVocabulary(false);
+    setCurrentSection('exercises');
+    setLessonCompleted(false);
+    setScore(0);
+  };
+
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">{lesson.title}</h2>
+          {/* Header */}
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900">{lesson.title}</h2>
+              <p className="text-gray-600">{lesson.description}</p>
+            </div>
             <button
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-gray-400 hover:text-gray-600 transition-colors text-2xl"
             >
               ✕
             </button>
           </div>
-          
-          <p className="text-gray-600 mb-6">{lesson.description}</p>
-          
-          <div className="text-center p-8 bg-gray-50 rounded-lg">
-            <p className="text-gray-500">Lesson exercises will be implemented next!</p>
-            <p className="text-sm text-gray-400 mt-2">This lesson is worth {lesson.xp_reward} XP</p>
+
+          {/* Progress Bar */}
+          <div className="mb-6">
+            <div className="flex justify-between text-sm text-gray-600 mb-2">
+              <span>
+                {currentSection === 'exercises' 
+                  ? `Exercise ${currentExerciseIndex + 1} of ${totalExercises}`
+                  : 'Vocabulary Review'
+                }
+              </span>
+              <span>{lesson.xp_reward} XP</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-3">
+              <div 
+                className="bg-purple-600 h-3 rounded-full transition-all duration-500"
+                style={{ 
+                  width: currentSection === 'exercises' 
+                    ? `${progress}%` 
+                    : '100%' 
+                }}
+              ></div>
+            </div>
           </div>
-          
-          <div className="flex justify-end space-x-3 mt-6">
+
+          {/* Exercise Section */}
+          {currentSection === 'exercises' && (
+            <div className="mb-6">
+              <ExerciseComponent
+                exercise={currentExercise}
+                onSubmit={handleExerciseSubmit}
+                result={exerciseResults[currentExercise?.id]}
+                userAnswer={userAnswers[currentExercise?.id]}
+              />
+            </div>
+          )}
+
+          {/* Vocabulary Section */}
+          {currentSection === 'vocabulary' && (
+            <div className="mb-6">
+              <VocabularySection
+                vocabulary={lesson.vocabulary}
+                onComplete={handleLessonComplete}
+                onReset={handleResetLesson}
+                score={score}
+                totalExercises={totalExercises}
+              />
+            </div>
+          )}
+
+          {/* Navigation */}
+          <div className="flex justify-between items-center pt-4 border-t border-gray-200">
             <button
               onClick={onClose}
               className="px-4 py-2 text-gray-600 hover:text-gray-800 transition-colors"
             >
-              Close
+              Exit Lesson
             </button>
-            <button
-              onClick={() => onComplete(lesson.id, lesson.xp_reward, 100)}
-              className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
-            >
-              Complete Lesson
-            </button>
+            
+            {currentSection === 'exercises' && (
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-600">
+                  Score: {score}/{currentExerciseIndex + (exerciseResults[currentExercise?.id] !== undefined ? 1 : 0)}
+                </span>
+              </div>
+            )}
           </div>
         </div>
+      </div>
+    </div>
+  );
+};
+
+// Exercise Component - handles different exercise types
+const ExerciseComponent = ({ exercise, onSubmit, result, userAnswer }) => {
+  const [selectedAnswer, setSelectedAnswer] = useState('');
+  const [showResult, setShowResult] = useState(false);
+
+  // Reset state when exercise changes
+  useEffect(() => {
+    setSelectedAnswer('');
+    setShowResult(false);
+  }, [exercise.id]);
+
+  // Update showResult when result prop changes
+  useEffect(() => {
+    if (result !== undefined) {
+      setShowResult(true);
+    }
+  }, [result]);
+
+  // Handle answer submission
+  const handleSubmit = () => {
+    if (!selectedAnswer && exercise.type !== 'translation') return;
+    
+    let isCorrect = false;
+    
+    switch (exercise.type) {
+      case 'multiple_choice':
+        isCorrect = selectedAnswer === exercise.correct;
+        break;
+      case 'fill_blanks':
+        isCorrect = selectedAnswer.toLowerCase().trim() === exercise.answer.toLowerCase().trim();
+        break;
+      case 'translation':
+        isCorrect = selectedAnswer.toLowerCase().trim() === exercise.english.toLowerCase().trim();
+        break;
+      case 'word_order':
+        isCorrect = JSON.stringify(selectedAnswer) === JSON.stringify(exercise.correct_order);
+        break;
+      default:
+        isCorrect = false;
+    }
+    
+    onSubmit(exercise.id, selectedAnswer, isCorrect);
+  };
+
+  // Handle TTS for Norwegian text
+  const handleSpeak = async (text) => {
+    try {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'nb-NO';
+        utterance.rate = 0.8;
+        speechSynthesis.speak(utterance);
+      }
+    } catch (error) {
+      console.error('TTS Error:', error);
+    }
+  };
+
+  // Render different exercise types
+  const renderExercise = () => {
+    switch (exercise.type) {
+      case 'multiple_choice':
+        return (
+          <div className="space-y-4">
+            <div className="text-lg font-medium text-gray-900 mb-4">
+              {exercise.question}
+              {exercise.tts_text && (
+                <button
+                  onClick={() => handleSpeak(exercise.tts_text)}
+                  className="ml-2 text-purple-600 hover:text-purple-700"
+                >
+                  🔊
+                </button>
+              )}
+            </div>
+            <div className="space-y-3">
+              {exercise.options.map((option, index) => (
+                <button
+                  key={index}
+                  onClick={() => setSelectedAnswer(option)}
+                  disabled={showResult}
+                  className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 ${
+                    showResult
+                      ? option === exercise.correct
+                        ? 'border-green-500 bg-green-50 text-green-800'
+                        : selectedAnswer === option
+                        ? 'border-red-500 bg-red-50 text-red-800'
+                        : 'border-gray-200 bg-gray-50 text-gray-600'
+                      : selectedAnswer === option
+                      ? 'border-purple-500 bg-purple-50 text-purple-800'
+                      : 'border-gray-200 hover:border-purple-300 hover:bg-purple-25'
+                  }`}
+                >
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
+                      showResult
+                        ? option === exercise.correct
+                          ? 'border-green-500 bg-green-500'
+                          : selectedAnswer === option
+                          ? 'border-red-500 bg-red-500'
+                          : 'border-gray-300'
+                        : selectedAnswer === option
+                        ? 'border-purple-500 bg-purple-500'
+                        : 'border-gray-300'
+                    }`}>
+                      {showResult ? (
+                        option === exercise.correct ? (
+                          <CheckCircle size={16} className="text-white" />
+                        ) : selectedAnswer === option ? (
+                          <X size={16} className="text-white" />
+                        ) : null
+                      ) : selectedAnswer === option ? (
+                        <div className="w-2 h-2 bg-white rounded-full"></div>
+                      ) : null}
+                    </div>
+                    <span>{option}</span>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </div>
+        );
+
+      case 'fill_blanks':
+        return (
+          <div className="space-y-4">
+            <div className="text-lg font-medium text-gray-900 mb-4">
+              {exercise.question}
+              {exercise.tts_text && (
+                <button
+                  onClick={() => handleSpeak(exercise.tts_text)}
+                  className="ml-2 text-purple-600 hover:text-purple-700"
+                >
+                  🔊
+                </button>
+              )}
+            </div>
+            <div className="flex items-center space-x-2">
+              <input
+                type="text"
+                value={selectedAnswer}
+                onChange={(e) => setSelectedAnswer(e.target.value)}
+                disabled={showResult}
+                className={`flex-1 p-3 border-2 rounded-lg text-lg ${
+                  showResult
+                    ? result
+                      ? 'border-green-500 bg-green-50 text-green-800'
+                      : 'border-red-500 bg-red-50 text-red-800'
+                    : 'border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200'
+                }`}
+                placeholder="Type your answer here..."
+              />
+            </div>
+          </div>
+        );
+
+      case 'translation':
+        return (
+          <div className="space-y-4">
+            <div className="text-lg font-medium text-gray-900 mb-4">
+              {exercise.question}
+              {exercise.tts_text && (
+                <button
+                  onClick={() => handleSpeak(exercise.tts_text)}
+                  className="ml-2 text-purple-600 hover:text-purple-700"
+                >
+                  🔊
+                </button>
+              )}
+            </div>
+            <div className="bg-purple-50 p-4 rounded-lg mb-4">
+              <div className="text-xl font-semibold text-purple-800 mb-2">
+                {exercise.norwegian}
+              </div>
+              <div className="text-gray-600">
+                Translate this to English
+              </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <input
+                type="text"
+                value={selectedAnswer}
+                onChange={(e) => setSelectedAnswer(e.target.value)}
+                disabled={showResult}
+                className={`flex-1 p-3 border-2 rounded-lg text-lg ${
+                  showResult
+                    ? result
+                      ? 'border-green-500 bg-green-50 text-green-800'
+                      : 'border-red-500 bg-red-50 text-red-800'
+                    : 'border-gray-300 focus:border-purple-500 focus:ring-2 focus:ring-purple-200'
+                }`}
+                placeholder="Type the English translation..."
+              />
+            </div>
+          </div>
+        );
+
+      case 'word_order':
+        return <WordOrderExercise 
+          exercise={exercise} 
+          onSubmit={onSubmit} 
+          showResult={showResult}
+          result={result}
+        />;
+
+      default:
+        return <div>Exercise type not supported</div>;
+    }
+  };
+
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 p-6">
+      {renderExercise()}
+      
+      {/* Explanation */}
+      {showResult && (
+        <div className={`mt-6 p-4 rounded-lg ${
+          result ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
+        }`}>
+          <div className="flex items-start space-x-2">
+            {result ? (
+              <CheckCircle size={20} className="text-green-600 mt-0.5" />
+            ) : (
+              <X size={20} className="text-red-600 mt-0.5" />
+            )}
+            <div>
+              <div className={`font-semibold ${
+                result ? 'text-green-800' : 'text-red-800'
+              }`}>
+                {result ? 'Correct!' : 'Not quite right.'}
+              </div>
+              <div className={`text-sm mt-1 ${
+                result ? 'text-green-700' : 'text-red-700'
+              }`}>
+                {exercise.explanation}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Submit Button */}
+      {!showResult && (exercise.type !== 'word_order') && (
+        <div className="mt-6">
+          <button
+            onClick={handleSubmit}
+            disabled={!selectedAnswer}
+            className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            Submit Answer
+          </button>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// Word Order Exercise Component
+const WordOrderExercise = ({ exercise, onSubmit, showResult, result }) => {
+  const [words, setWords] = useState(exercise.words || []);
+  const [selectedWords, setSelectedWords] = useState([]);
+
+  // Reset state when exercise changes
+  useEffect(() => {
+    setWords(exercise.words || []);
+    setSelectedWords([]);
+  }, [exercise.id]);
+
+  const handleWordClick = (word) => {
+    if (showResult) return;
+    setSelectedWords(prev => [...prev, word]);
+    setWords(prev => prev.filter(w => w !== word));
+  };
+
+  const handleSelectedWordClick = (word) => {
+    if (showResult) return;
+    setWords(prev => [...prev, word]);
+    setSelectedWords(prev => prev.filter(w => w !== word));
+  };
+
+  const handleSubmitOrder = () => {
+    const isCorrect = JSON.stringify(selectedWords) === JSON.stringify(exercise.correct_order);
+    onSubmit(exercise.id, selectedWords, isCorrect);
+  };
+
+  return (
+    <div className="space-y-4">
+      <div className="text-lg font-medium text-gray-900 mb-4">
+        {exercise.question}
+      </div>
+      
+      <div className="bg-purple-50 p-4 rounded-lg">
+        <div className="text-sm text-gray-600 mb-2">Your sentence:</div>
+        <div className="min-h-[60px] p-3 bg-white rounded-lg border-2 border-dashed border-purple-300">
+          {selectedWords.map((word, index) => (
+            <button
+              key={index}
+              onClick={() => handleSelectedWordClick(word)}
+              disabled={showResult}
+              className="inline-block bg-purple-600 text-white px-3 py-1 rounded-lg mr-2 mb-2 hover:bg-purple-700 transition-colors disabled:opacity-50"
+            >
+              {word}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="bg-gray-50 p-4 rounded-lg">
+        <div className="text-sm text-gray-600 mb-2">Available words:</div>
+        <div className="flex flex-wrap gap-2">
+          {words.map((word, index) => (
+            <button
+              key={index}
+              onClick={() => handleWordClick(word)}
+              disabled={showResult}
+              className="bg-white border-2 border-gray-300 text-gray-700 px-3 py-1 rounded-lg hover:border-purple-400 hover:bg-purple-50 transition-colors disabled:opacity-50"
+            >
+              {word}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Show correct answer if wrong */}
+      {showResult && !result && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="text-red-800 font-semibold mb-2">Correct answer:</div>
+          <div className="flex flex-wrap gap-2">
+            {exercise.correct_order.map((word, index) => (
+              <span
+                key={index}
+                className="bg-red-100 text-red-800 px-3 py-1 rounded-lg"
+              >
+                {word}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {selectedWords.length > 0 && !showResult && (
+        <button
+          onClick={handleSubmitOrder}
+          className="w-full bg-purple-600 text-white py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+        >
+          Check Answer
+        </button>
+      )}
+    </div>
+  );
+};
+
+// Vocabulary Section Component
+const VocabularySection = ({ vocabulary, onComplete, onReset, score, totalExercises }) => {
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [showPronunciation, setShowPronunciation] = useState({});
+
+  const currentWord = vocabulary[currentWordIndex];
+  const accuracy = Math.round((score / totalExercises) * 100);
+
+  const handleSpeak = async (text) => {
+    try {
+      if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'nb-NO';
+        utterance.rate = 0.8;
+        speechSynthesis.speak(utterance);
+      }
+    } catch (error) {
+      console.error('TTS Error:', error);
+    }
+  };
+
+  const togglePronunciation = (word) => {
+    setShowPronunciation(prev => ({
+      ...prev,
+      [word]: !prev[word]
+    }));
+  };
+
+  return (
+    <div className="bg-white rounded-lg border border-gray-200 p-6">
+      {/* Results Summary */}
+      <div className="text-center mb-8">
+        <h3 className="text-2xl font-bold text-gray-900 mb-2">Lesson Complete!</h3>
+        <div className="flex justify-center space-x-8 mb-4">
+          <div className="text-center">
+            <div className="text-3xl font-bold text-purple-600">{score}</div>
+            <div className="text-sm text-gray-600">Correct</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-blue-600">{accuracy}%</div>
+            <div className="text-sm text-gray-600">Accuracy</div>
+          </div>
+          <div className="text-center">
+            <div className="text-3xl font-bold text-green-600">{vocabulary.length}</div>
+            <div className="text-sm text-gray-600">New Words</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Vocabulary Review */}
+      <div className="mb-6">
+        <h4 className="text-xl font-semibold text-gray-900 mb-4">Vocabulary Review</h4>
+        
+        <div className="space-y-4">
+          {vocabulary.map((word, index) => (
+            <div key={index} className="bg-gray-50 rounded-lg p-4">
+              <div className="flex items-center justify-between mb-2">
+                <div className="text-xl font-semibold text-gray-900">
+                  {word.norwegian}
+                </div>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => togglePronunciation(word.norwegian)}
+                    className="text-purple-600 hover:text-purple-700"
+                  >
+                    {showPronunciation[word.norwegian] ? '🔊' : '🔇'}
+                  </button>
+                  <button
+                    onClick={() => handleSpeak(word.norwegian)}
+                    className="bg-purple-100 text-purple-700 px-3 py-1 rounded-lg text-sm hover:bg-purple-200 transition-colors"
+                  >
+                    Listen
+                  </button>
+                </div>
+              </div>
+              
+              <div className="text-gray-700 mb-2">{word.english}</div>
+              
+              {showPronunciation[word.norwegian] && (
+                <div className="text-sm text-gray-600 mb-2">
+                  Pronunciation: {word.pronunciation}
+                </div>
+              )}
+              
+              <div className="text-sm text-gray-600 italic">
+                Example: {word.example}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="flex justify-center space-x-4">
+        <button
+          onClick={onReset}
+          className="px-6 py-3 bg-gray-600 text-white rounded-lg font-semibold hover:bg-gray-700 transition-colors"
+        >
+          Try Again
+        </button>
+        <button
+          onClick={onComplete}
+          className="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors"
+        >
+          Complete Lesson
+        </button>
       </div>
     </div>
   );
