@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../context/AppContext';
 import ttsService from '../services/tts';
 import translationService from '../services/translation';
@@ -16,6 +17,7 @@ import {
 import WordTooltip from './WordTooltip';
 
 const News = () => {
+  const { t } = useTranslation();
   const { addWord } = useApp();
   const [articles, setArticles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -671,9 +673,9 @@ const News = () => {
             />
           </div>
         </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Norwegian News</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('news.title')}</h1>
         <p className="text-gray-600">
-          Read real Norwegian news and learn vocabulary in context
+          {t('news.subtitle')}
         </p>
       </div>
 
@@ -739,8 +741,8 @@ const News = () => {
                   : 'text-red-800'
               }`}>
                 {error.includes('sample Norwegian articles') 
-                  ? 'Demo Mode' 
-                  : 'Error loading news'
+                  ? t('news.demoMode') 
+                  : t('news.errorLoading')
                 }
               </p>
               <p className={`text-sm mt-1 ${

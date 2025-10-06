@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../context/AppContext';
 import ttsService from '../services/tts';
 import translationService from '../services/translation';
@@ -7,6 +8,7 @@ import WordTooltip from './WordTooltip';
 import WordSets from './WordSets';
 
 const WordManagement = () => {
+  const { t } = useTranslation();
   const { words, addWord, deleteWord, isLoading } = useApp();
   const [activeTab, setActiveTab] = useState('my-words'); // 'my-words' or 'word-sets'
   const [showAddForm, setShowAddForm] = useState(false);
@@ -381,7 +383,7 @@ const WordManagement = () => {
               className="w-full h-full object-contain"
             />
           </div>
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">My Vocabulary</h2>
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-900">{t('wordManagement.title')}</h2>
         </div>
         <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
           {/* Import/Export buttons */}
@@ -432,7 +434,7 @@ const WordManagement = () => {
           >
             <div className="flex items-center space-x-2">
               <Plus size={16} />
-              <span>My Words ({words.length})</span>
+              <span>{t('navigation.myWords')} ({words.length})</span>
             </div>
           </button>
           <button
@@ -445,7 +447,7 @@ const WordManagement = () => {
           >
             <div className="flex items-center space-x-2">
               <BookOpen size={16} />
-              <span>Word Sets</span>
+              <span>{t('wordSets.title')}</span>
             </div>
           </button>
         </div>
@@ -521,7 +523,7 @@ const WordManagement = () => {
       {showAddForm && (
         <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-4 sm:mb-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-900">Add New Word</h3>
+            <h3 className="text-lg font-semibold text-gray-900">{t('wordManagement.addWord')}</h3>
             <button
               onClick={() => setShowAddForm(false)}
               className="text-gray-400 hover:text-gray-600 p-1 -m-1"
@@ -534,13 +536,13 @@ const WordManagement = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Norwegian Word
+                  {t('wordManagement.norwegian')}
                 </label>
                 <input
                   type="text"
                   value={formData.norwegian}
                   onChange={handleNorwegianWordChange}
-                  placeholder="Enter Norwegian word"
+                  placeholder={t('wordManagement.norwegian')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   required
                 />
@@ -576,13 +578,13 @@ const WordManagement = () => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  English Translation
+                  {t('wordManagement.english')}
                 </label>
                 <input
                   type="text"
                   value={formData.english}
                   onChange={(e) => setFormData({ ...formData, english: e.target.value })}
-                  placeholder="Enter English translation"
+                  placeholder={t('wordManagement.english')}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                   required
                 />
@@ -591,7 +593,7 @@ const WordManagement = () => {
             
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Example Sentence (Optional)
+                {t('wordManagement.example')} (Optional)
               </label>
               <input
                 type="text"
@@ -632,15 +634,15 @@ const WordManagement = () => {
       {words.length === 0 ? (
         <div className="bg-white rounded-xl shadow-sm p-6 sm:p-8 text-center">
           <div className="text-4xl sm:text-6xl mb-4">📚</div>
-          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No words yet</h3>
+          <h3 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">{t('wordManagement.noWords')}</h3>
           <p className="text-gray-600 mb-6 text-sm sm:text-base">
-            Start building your Norwegian vocabulary by adding your first word!
+            {t('wordManagement.noWords')}
           </p>
           <button
             onClick={() => setShowAddForm(true)}
             className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:from-purple-700 hover:to-blue-700 transform hover:-translate-y-1 transition-all duration-200 w-full sm:w-auto"
           >
-            Add Your First Word
+{t('wordManagement.addFirstWord')}
           </button>
         </div>
       ) : (

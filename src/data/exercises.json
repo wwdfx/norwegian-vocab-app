@@ -1,0 +1,413 @@
+{
+  "exercises": [
+    {
+      "id": "exercise_001",
+      "title": "Pronoun Exercise: Ken and Monika",
+      "description": "Fill in jeg, du, han or hun in the gaps",
+      "type": "fill_blanks_dialogue",
+      "level": 1,
+      "xp_reward": 25,
+      "instructions": "Fill in jeg, du, han or hun in the gaps.",
+      "example": "Ken kommer fra England. Han er 23 år gammel. (Ken comes from England. He is 23 years old.)",
+      "content": {
+        "dialogue": [
+          {
+            "speaker": "Ken",
+            "text": "Ken reiser med tog fra Oslo til Trondheim.",
+            "blanks": []
+          },
+          {
+            "speaker": "Ken",
+            "text": "[BLANK] snakker med ei dame. Hun heter Monika.",
+            "blanks": [
+              {
+                "position": 0,
+                "correct_answer": "Han",
+                "options": ["jeg", "du", "han", "hun"]
+              }
+            ]
+          },
+          {
+            "speaker": "Monika",
+            "text": "[BLANK] heter Monika. Hva heter [BLANK]?",
+            "blanks": [
+              {
+                "position": 0,
+                "correct_answer": "Jeg",
+                "options": ["jeg", "du", "han", "hun"]
+              },
+              {
+                "position": 1,
+                "correct_answer": "du",
+                "options": ["jeg", "du", "han", "hun"]
+              }
+            ]
+          },
+          {
+            "speaker": "Ken",
+            "text": "[BLANK] heter Ken.",
+            "blanks": [
+              {
+                "position": 0,
+                "correct_answer": "Jeg",
+                "options": ["jeg", "du", "han", "hun"]
+              }
+            ]
+          },
+          {
+            "speaker": "Monika",
+            "text": "Hvor kommer [BLANK] fra?",
+            "blanks": [
+              {
+                "position": 0,
+                "correct_answer": "du",
+                "options": ["jeg", "du", "han", "hun"]
+              }
+            ]
+          },
+          {
+            "speaker": "Ken",
+            "text": "[BLANK] kommer fra England. Og [BLANK]?",
+            "blanks": [
+              {
+                "position": 0,
+                "correct_answer": "Jeg",
+                "options": ["jeg", "du", "han", "hun"]
+              },
+              {
+                "position": 1,
+                "correct_answer": "du",
+                "options": ["jeg", "du", "han", "hun"]
+              }
+            ]
+          },
+          {
+            "speaker": "Monika",
+            "text": "[BLANK] kommer fra Oslo, men [BLANK] bor i Trondheim.",
+            "blanks": [
+              {
+                "position": 0,
+                "correct_answer": "Jeg",
+                "options": ["jeg", "du", "han", "hun"]
+              },
+              {
+                "position": 1,
+                "correct_answer": "jeg",
+                "options": ["jeg", "du", "han", "hun"]
+              }
+            ]
+          },
+          {
+            "speaker": "Ken",
+            "text": "Har [BLANK] familie i Trondheim?",
+            "blanks": [
+              {
+                "position": 0,
+                "correct_answer": "du",
+                "options": ["jeg", "du", "han", "hun"]
+              }
+            ]
+          },
+          {
+            "speaker": "Monika",
+            "text": "Ja, [BLANK] er gift, og [BLANK] har ei jente på seks år.",
+            "blanks": [
+              {
+                "position": 0,
+                "correct_answer": "jeg",
+                "options": ["jeg", "du", "han", "hun"]
+              },
+              {
+                "position": 1,
+                "correct_answer": "jeg",
+                "options": ["jeg", "du", "han", "hun"]
+              }
+            ]
+          },
+          {
+            "speaker": "Ken",
+            "text": "Hva heter [BLANK]?",
+            "blanks": [
+              {
+                "position": 0,
+                "correct_answer": "hun",
+                "options": ["jeg", "du", "han", "hun"]
+              }
+            ]
+          },
+          {
+            "speaker": "Monika",
+            "text": "[BLANK] heter Emma.",
+            "blanks": [
+              {
+                "position": 0,
+                "correct_answer": "Hun",
+                "options": ["jeg", "du", "han", "hun"]
+              }
+            ]
+          }
+        ]
+      },
+      "vocabulary": [
+        {
+          "norwegian": "jeg",
+          "english": "I",
+          "pronunciation": "jæi",
+          "example": "Jeg heter Ken."
+        },
+        {
+          "norwegian": "du",
+          "english": "you (singular)",
+          "pronunciation": "du",
+          "example": "Hva heter du?"
+        },
+        {
+          "norwegian": "han",
+          "english": "he",
+          "pronunciation": "han",
+          "example": "Han er 23 år gammel."
+        },
+        {
+          "norwegian": "hun",
+          "english": "she",
+          "pronunciation": "hun",
+          "example": "Hun heter Monika."
+        }
+      ],
+      "explanation": "This exercise helps you practice using Norwegian personal pronouns in context. Remember: jeg (I), du (you singular), han (he), hun (she)."
+    },
+    {
+      "id": "exercise_002",
+      "title": "Verb Conjugation: Present Tense",
+      "description": "Fill in verbs in present tense",
+      "type": "fill_blanks_sentences",
+      "level": 1,
+      "xp_reward": 30,
+      "instructions": "Fill in verbs in present tense.",
+      "example": "Jeg bor i Norge. (I live in Norway.)",
+      "content": {
+        "sentences": [
+          {
+            "id": "sentence_001",
+            "text": "Jeg [BLANK] (å hete) Ken.",
+            "correct_answer": "heter",
+            "explanation": "Å hete (to be called) → heter (am called)"
+          },
+          {
+            "id": "sentence_002", 
+            "text": "Jeg [BLANK] (å komme) fra England.",
+            "correct_answer": "kommer",
+            "explanation": "Å komme (to come) → kommer (come)"
+          },
+          {
+            "id": "sentence_003",
+            "text": "Ken [BLANK] (å reise) med tog fra Oslo til Trondheim.",
+            "correct_answer": "reiser",
+            "explanation": "Å reise (to travel) → reiser (travels)"
+          },
+          {
+            "id": "sentence_004",
+            "text": "Ken [BLANK] (å snakke) med Monika.",
+            "correct_answer": "snakker",
+            "explanation": "Å snakke (to speak) → snakker (speaks)"
+          },
+          {
+            "id": "sentence_005",
+            "text": "Hun [BLANK] (å bo) i Trondheim.",
+            "correct_answer": "bor",
+            "explanation": "Å bo (to live) → bor (lives)"
+          }
+        ]
+      },
+      "vocabulary": [
+        {
+          "norwegian": "å hete",
+          "english": "to be called",
+          "present": "heter",
+          "example": "Jeg heter Ken."
+        },
+        {
+          "norwegian": "å komme",
+          "english": "to come",
+          "present": "kommer",
+          "example": "Jeg kommer fra England."
+        },
+        {
+          "norwegian": "å reise",
+          "english": "to travel",
+          "present": "reiser",
+          "example": "Ken reiser med tog."
+        },
+        {
+          "norwegian": "å snakke",
+          "english": "to speak",
+          "present": "snakker",
+          "example": "Ken snakker med Monika."
+        },
+        {
+          "norwegian": "å bo",
+          "english": "to live",
+          "present": "bor",
+          "example": "Hun bor i Trondheim."
+        }
+      ],
+      "explanation": "This exercise helps you practice conjugating Norwegian verbs in the present tense. Most verbs add -r to the infinitive form to create the present tense."
+    },
+    {
+      "id": "exercise_003",
+      "title": "Norwegian Numbers Practice",
+      "description": "Practice writing numbers in Norwegian and converting between digits and words",
+      "type": "numbers_practice",
+      "level": 1,
+      "xp_reward": 35,
+      "instructions": "Complete both sections: write numbers as digits and write digits as Norwegian words.",
+      "example": "Fill in numbers: tre = 3. Write in letters: 11 = elleve",
+      "content": {
+        "fill_numbers": [
+          {
+            "id": "num_001",
+            "norwegian_word": "tre",
+            "correct_answer": "3"
+          },
+          {
+            "id": "num_002",
+            "norwegian_word": "ni",
+            "correct_answer": "9"
+          },
+          {
+            "id": "num_003",
+            "norwegian_word": "tolv",
+            "correct_answer": "12"
+          },
+          {
+            "id": "num_004",
+            "norwegian_word": "én",
+            "correct_answer": "1"
+          },
+          {
+            "id": "num_005",
+            "norwegian_word": "tjueto",
+            "correct_answer": "22"
+          },
+          {
+            "id": "num_006",
+            "norwegian_word": "tretten",
+            "correct_answer": "13"
+          }
+        ],
+        "write_letters": [
+          {
+            "id": "word_001",
+            "number": "4",
+            "correct_answer": "fire"
+          },
+          {
+            "id": "word_002",
+            "number": "7",
+            "correct_answer": "sju"
+          },
+          {
+            "id": "word_003",
+            "number": "20",
+            "correct_answer": "tjue"
+          },
+          {
+            "id": "word_004",
+            "number": "16",
+            "correct_answer": "seksten"
+          },
+          {
+            "id": "word_005",
+            "number": "8",
+            "correct_answer": "åtte"
+          },
+          {
+            "id": "word_006",
+            "number": "18",
+            "correct_answer": "atten"
+          }
+        ]
+      },
+      "vocabulary": [
+        {
+          "norwegian": "én/en/et",
+          "english": "one",
+          "pronunciation": "æn/en/et",
+          "example": "én bok (one book)"
+        },
+        {
+          "norwegian": "tre",
+          "english": "three",
+          "pronunciation": "tre",
+          "example": "tre bøker (three books)"
+        },
+        {
+          "norwegian": "fire",
+          "english": "four",
+          "pronunciation": "fir-e",
+          "example": "fire år (four years)"
+        },
+        {
+          "norwegian": "sju",
+          "english": "seven",
+          "pronunciation": "shu",
+          "example": "sju dager (seven days)"
+        },
+        {
+          "norwegian": "åtte",
+          "english": "eight",
+          "pronunciation": "ot-te",
+          "example": "åtte timer (eight hours)"
+        },
+        {
+          "norwegian": "ni",
+          "english": "nine",
+          "pronunciation": "ni",
+          "example": "ni minutter (nine minutes)"
+        },
+        {
+          "norwegian": "tolv",
+          "english": "twelve",
+          "pronunciation": "tolv",
+          "example": "tolv måneder (twelve months)"
+        },
+        {
+          "norwegian": "tretten",
+          "english": "thirteen",
+          "pronunciation": "tret-ten",
+          "example": "tretten år (thirteen years)"
+        },
+        {
+          "norwegian": "seksten",
+          "english": "sixteen",
+          "pronunciation": "seks-ten",
+          "example": "seksten timer (sixteen hours)"
+        },
+        {
+          "norwegian": "atten",
+          "english": "eighteen",
+          "pronunciation": "at-ten",
+          "example": "atten år (eighteen years)"
+        },
+        {
+          "norwegian": "tjue",
+          "english": "twenty",
+          "pronunciation": "tu-e",
+          "example": "tjue minutter (twenty minutes)"
+        },
+        {
+          "norwegian": "tjueto",
+          "english": "twenty-two",
+          "pronunciation": "tu-e-to",
+          "example": "tjueto grader (twenty-two degrees)"
+        }
+      ],
+      "explanation": "This exercise helps you practice Norwegian numbers in both directions. Remember that Norwegian numbers are written as single words, and compound numbers like 'tjueto' (22) are formed by combining the tens and units."
+    }
+  ],
+  "metadata": {
+    "version": "1.0.0",
+    "total_exercises": 3,
+    "last_updated": "2024-10-04"
+  }
+}

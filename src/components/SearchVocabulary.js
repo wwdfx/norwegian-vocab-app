@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../context/AppContext';
 import norwegianDictionaryService from '../services/norwegianDictionaryService';
 import ttsService from '../services/tts';
@@ -14,6 +15,7 @@ import {
 } from 'lucide-react';
 
 const SearchVocabulary = () => {
+  const { t } = useTranslation();
   const { addWord, navigateToWordDetails } = useApp();
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState(null);
@@ -234,8 +236,8 @@ const SearchVocabulary = () => {
       return (
         <div className="text-center py-8">
           <BookOpen className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <p className="text-gray-600">No words found for "{searchResults.query}"</p>
-          <p className="text-sm text-gray-500 mt-2">Try a different search term or check your spelling</p>
+          <p className="text-gray-600">{t('search.noResults')} "{searchResults.query}"</p>
+          <p className="text-sm text-gray-500 mt-2">{t('search.tryDifferent')}</p>
         </div>
       );
     }
@@ -244,7 +246,7 @@ const SearchVocabulary = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900">
-            Found {searchResults.totalCount} results for "{searchResults.query}"
+{t('search.searchResults')} {searchResults.totalCount} {t('search.results')} "{searchResults.query}"
           </h3>
           <button
             onClick={() => setShowFilters(!showFilters)}
@@ -422,9 +424,9 @@ const SearchVocabulary = () => {
             />
           </div>
         </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Search Norwegian Vocabulary</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('search.title')}</h1>
         <p className="text-gray-600">
-          Discover new Norwegian words using the official dictionary API
+          {t('search.subtitle')}
         </p>
         <button
           onClick={handleTestAPI}
@@ -443,7 +445,7 @@ const SearchVocabulary = () => {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search for Norwegian words..."
+                placeholder={t('search.searchPlaceholder')}
                 className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-purple-500 focus:outline-none text-lg"
                 required
               />
@@ -471,7 +473,7 @@ const SearchVocabulary = () => {
         {/* Recent Searches */}
         {recentSearches.length > 0 && (
           <div className="mt-4 pt-4 border-t border-gray-200">
-            <h3 className="text-sm font-medium text-gray-700 mb-2">Recent searches:</h3>
+            <h3 className="text-sm font-medium text-gray-700 mb-2">{t('search.recentSearches')}:</h3>
             <div className="flex flex-wrap gap-2">
               {recentSearches.map((search, index) => (
                 <button
@@ -513,13 +515,13 @@ const SearchVocabulary = () => {
          <div className="flex items-start space-x-2">
            <Sparkles className="h-5 w-5 text-blue-500 mt-0.5 flex-shrink-0" />
            <div className="text-sm text-blue-800">
-             <p className="font-medium mb-1">💡 Search Tips</p>
+             <p className="font-medium mb-1">💡 {t('search.searchTips')}</p>
              <ul className="space-y-1 text-xs">
-               <li>• Use wildcards: <code>katt*</code> finds words starting with "katt"</li>
-               <li>• Search by word class: Use filters to find specific types of words</li>
-               <li>• Click on any word to see detailed information</li>
-               <li>• Use the + button to add words directly to your vocabulary</li>
-               <li>• Click the speaker icon to hear pronunciation</li>
+               <li>• {t('search.tip1')}</li>
+               <li>• {t('search.tip2')}</li>
+               <li>• {t('search.tip3')}</li>
+               <li>• {t('search.tip4')}</li>
+               <li>• {t('search.tip5')}</li>
              </ul>
            </div>
          </div>

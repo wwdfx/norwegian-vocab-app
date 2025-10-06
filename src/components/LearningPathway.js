@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { 
   BookOpen, 
   Trophy, 
@@ -17,6 +18,7 @@ import gamificationService from '../services/gamificationService';
 import lessonData from '../data/lessons.json';
 
 const LearningPathway = () => {
+  const { t } = useTranslation();
   const [userStats, setUserStats] = useState(null);
   const [selectedChapter, setSelectedChapter] = useState(null);
   const [showLessonModal, setShowLessonModal] = useState(false);
@@ -134,8 +136,8 @@ const LearningPathway = () => {
               />
             </div>
             <div>
-              <h1 className="text-2xl font-bold">Norwegian Learning Pathway</h1>
-              <p className="text-purple-100">Master Norwegian through interactive lessons</p>
+              <h1 className="text-2xl font-bold">{t('lessons.title')}</h1>
+              <p className="text-purple-100">{t('lessons.subtitle')}</p>
             </div>
           </div>
           
@@ -144,7 +146,7 @@ const LearningPathway = () => {
             <div className="flex items-center space-x-4">
               <div className="text-center">
                 <div className="text-2xl font-bold">{userStats.level}</div>
-                <div className="text-sm text-purple-100">Level</div>
+                <div className="text-sm text-purple-100">{t('lessons.level')}</div>
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold">{userStats.xp}</div>
@@ -152,7 +154,7 @@ const LearningPathway = () => {
               </div>
               <div className="text-center">
                 <div className="text-2xl font-bold">{userStats.streak}</div>
-                <div className="text-sm text-purple-100">Day Streak</div>
+                <div className="text-sm text-purple-100">{t('lessons.dayStreak')}</div>
               </div>
             </div>
           </div>
@@ -161,7 +163,7 @@ const LearningPathway = () => {
         {/* XP Progress Bar */}
         <div className="mt-4">
           <div className="flex justify-between text-sm mb-2">
-            <span>Level {userStats.level}</span>
+            <span>{t('lessons.level')} {userStats.level}</span>
             <span>{userStats.xp} / {userStats.xpForNextLevel} XP</span>
           </div>
           <div className="w-full bg-purple-200 rounded-full h-3">
@@ -180,15 +182,15 @@ const LearningPathway = () => {
             <div className="flex items-center space-x-3">
               <Zap size={24} />
               <div>
-                <h3 className="font-semibold">Daily Bonus Available!</h3>
-                <p className="text-sm">Keep your streak going and earn bonus XP</p>
+                <h3 className="font-semibold">{t('lessons.dailyBonusAvailable')}</h3>
+                <p className="text-sm">{t('lessons.dailyBonusDesc')}</p>
               </div>
             </div>
             <button
               onClick={handleClaimDailyBonus}
               className="bg-white text-orange-600 px-4 py-2 rounded-lg font-semibold hover:bg-orange-50 transition-colors"
             >
-              Claim +{achievement.xp} XP
+{t('lessons.claimBonus')} +{achievement.xp} XP
             </button>
           </div>
         </div>
@@ -200,7 +202,7 @@ const LearningPathway = () => {
           <div className="flex items-center space-x-3">
             <Award size={24} />
             <div>
-              <h3 className="font-semibold">Achievement Unlocked!</h3>
+              <h3 className="font-semibold">{t('lessons.achievementUnlocked')}</h3>
               <p>{achievement.message}</p>
             </div>
           </div>
@@ -225,7 +227,7 @@ const LearningPathway = () => {
                 <div className="flex items-center justify-between">
                   <div className="text-4xl">{chapter.icon}</div>
                   <div className="text-right">
-                    <div className="text-sm opacity-90">Level {chapter.level}</div>
+                    <div className="text-sm opacity-90">{t('lessons.level')} {chapter.level}</div>
                     <div className="text-xs opacity-75">{chapter.theme}</div>
                   </div>
                 </div>
@@ -238,8 +240,8 @@ const LearningPathway = () => {
                 {/* Progress Bar */}
                 <div className="mb-4">
                   <div className="flex justify-between text-sm text-gray-600 mb-2">
-                    <span>Progress</span>
-                    <span>{progress.completed}/{progress.total} lessons</span>
+                    <span>{t('lessons.progress')}</span>
+                    <span>{progress.completed}/{progress.total} {t('lessons.lessons')}</span>
                   </div>
                   <div className="w-full bg-gray-200 rounded-full h-2">
                     <div 
@@ -288,12 +290,12 @@ const LearningPathway = () => {
                                   : 'bg-purple-100 text-purple-700 hover:bg-purple-200'
                               }`}
                             >
-                              {lessonProgress.completed ? 'Review' : 'Start'}
+{lessonProgress.completed ? t('lessons.review') : t('lessons.start')}
                             </button>
                           ) : (
                             <div className="flex items-center space-x-1 text-gray-400">
                               <Lock size={16} />
-                              <span className="text-sm">Locked</span>
+                              <span className="text-sm">{t('lessons.locked')}</span>
                             </div>
                           )}
                         </div>

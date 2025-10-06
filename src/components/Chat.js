@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../context/AppContext';
 import ttsService from '../services/tts';
 import translationService from '../services/translation';
@@ -13,27 +14,64 @@ import {
   RefreshCw,
   Settings,
   Mic,
-  MicOff
+  MicOff,
+  Play,
+  Pause
 } from 'lucide-react';
 
 const Chat = () => {
+  const { t } = useTranslation();
   const { addWord } = useApp();
   const [messages, setMessages] = useState([]);
   const [inputMessage, setInputMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
-  const [isListening, setIsListening] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const [autoSpeak, setAutoSpeak] = useState(true);
   const [conversationContext, setConversationContext] = useState('');
   const [isSpeaking, setIsSpeaking] = useState(false);
+  const [isVoiceSupported, setIsVoiceSupported] = useState(false);
+  const [recordingTime, setRecordingTime] = useState(0);
+  const [playingAudioId, setPlayingAudioId] = useState(null);
+  const [hasUserInteracted, setHasUserInteracted] = useState(false);
   
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const audioChunksRef = useRef([]);
+  const recordingTimerRef = useRef(null);
+  const currentAudioRef = useRef(null);
+  const welcomeInitializedRef = useRef(false);
 
   // Gemini API configuration
   const GEMINI_API_KEY = 'AIzaSyCiJ-bByf2slG63k6-l8eUD37A4xLGppgY';
   const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
+
+  // Audio Recording setup
+  useEffect(() => {
+    const checkMediaRecorderSupport = () => {
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && window.MediaRecorder) {
+        setIsVoiceSupported(true);
+        return true;
+      } else {
+        setIsVoiceSupported(false);
+        return false;
+      }
+    };
+
+    checkMediaRecorderSupport();
+
+    return () => {
+      // Cleanup on unmount
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+        mediaRecorderRef.current.stop();
+      }
+      if (recordingTimerRef.current) {
+        clearInterval(recordingTimerRef.current);
+      }
+    };
+  }, []);
 
   // Conversation starters for Norwegian practice
   const conversationStarters = [
@@ -49,16 +87,19 @@ const Chat = () => {
 
   // Initialize chat with welcome message
   useEffect(() => {
+    if (welcomeInitializedRef.current) return;
+    
     const welcomeMessage = {
       id: Date.now(),
       type: 'ai',
-      content: 'Hei! Jeg er din norske språkhjelper. Jeg kan hjelpe deg med å lære norsk gjennom samtaler. Hvordan kan jeg hjelpe deg i dag?',
+      content: t('chat.welcome'),
       timestamp: new Date(),
       isNorwegian: true
     };
     
     setMessages([welcomeMessage]);
     setChatHistory([welcomeMessage]);
+    welcomeInitializedRef.current = true;
     
     // Auto-speak welcome message
     if (autoSpeak) {
@@ -66,6 +107,27 @@ const Chat = () => {
         speakMessage(welcomeMessage.content, 'nb-NO');
       }, 500);
     }
+  }, []);
+
+  // Track user interaction for audio playback
+  useEffect(() => {
+    const handleUserInteraction = () => {
+      setHasUserInteracted(true);
+      // Remove event listeners after first interaction
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+    };
+
+    document.addEventListener('click', handleUserInteraction);
+    document.addEventListener('touchstart', handleUserInteraction);
+    document.addEventListener('keydown', handleUserInteraction);
+
+    return () => {
+      document.removeEventListener('click', handleUserInteraction);
+      document.removeEventListener('touchstart', handleUserInteraction);
+      document.removeEventListener('keydown', handleUserInteraction);
+    };
   }, []);
 
   // Scroll to bottom when new messages arrive
@@ -231,10 +293,14 @@ const Chat = () => {
   // Generate AI response using Gemini
   const generateAIResponse = async (userMessage) => {
     try {
-      const prompt = `Du er en norsk språklærer som hjelper elever med å lære norsk. 
+      const prompt = `Du er Astrid, en vennlig norsk språklærer som hjelper elever med å lære norsk. 
       Svar på norsk og bruk enkelt språk som er passelig for norskelever. 
       Hold svaret til maksimalt 2-3 setninger. 
       Bruk norske ord og uttrykk som kan være nyttige for å lære.
+      Signér dine svar som "Astrid" når det passer seg.
+      
+      VIKTIG: Bruk kun ren tekst uten formatering. Ikke bruk markdown, asterisker, fet tekst eller spesialtegn. 
+      Skriv i enkel norsk tekst som kan leses opp av tekst-til-tale uten problemer.
 
       Brukerens melding: "${userMessage}"
       
@@ -345,7 +411,7 @@ const Chat = () => {
     const welcomeMessage = {
       id: Date.now(),
       type: 'ai',
-      content: 'Hei! Jeg er din norske språkhjelper. Jeg kan hjelpe deg med å lære norsk gjennom samtaler. Hvordan kan jeg hjelpe deg i dag?',
+      content: t('chat.welcome'),
       timestamp: new Date(),
       isNorwegian: true
     };
@@ -353,6 +419,245 @@ const Chat = () => {
     setMessages([welcomeMessage]);
     setChatHistory([welcomeMessage]);
     setConversationContext('');
+    welcomeInitializedRef.current = false;
+  };
+
+  // Audio recording functions
+  const startRecording = async () => {
+    if (!isVoiceSupported) return;
+
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      audioChunksRef.current = [];
+      
+      const mediaRecorder = new MediaRecorder(stream);
+      mediaRecorderRef.current = mediaRecorder;
+      
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunksRef.current.push(event.data);
+        }
+      };
+      
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+        await sendVoiceMessage(audioBlob);
+        stream.getTracks().forEach(track => track.stop());
+      };
+      
+      mediaRecorder.start();
+      setIsRecording(true);
+      setRecordingTime(0);
+      
+      // Start recording timer
+      recordingTimerRef.current = setInterval(() => {
+        setRecordingTime(prev => prev + 1);
+      }, 1000);
+      
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      if (error.name === 'NotAllowedError') {
+        alert(t('chat.micPermissionDenied'));
+      } else {
+        alert(t('chat.recordingError'));
+      }
+    }
+  };
+
+  const stopRecording = () => {
+    if (mediaRecorderRef.current && mediaRecorderRef.current.state === 'recording') {
+      mediaRecorderRef.current.stop();
+      setIsRecording(false);
+      setRecordingTime(0);
+      
+      if (recordingTimerRef.current) {
+        clearInterval(recordingTimerRef.current);
+        recordingTimerRef.current = null;
+      }
+    }
+  };
+
+  const sendVoiceMessage = async (audioBlob) => {
+    setIsLoading(true);
+    
+    // Create audio URL for playback
+    const audioUrl = URL.createObjectURL(audioBlob);
+    
+    // Add voice message to chat immediately
+    const voiceMessage = {
+      id: Date.now(),
+      type: 'user',
+      content: null, // No text content for voice messages
+      audioUrl: audioUrl,
+      timestamp: new Date(),
+      isVoiceMessage: true
+    };
+
+    setMessages(prev => [...prev, voiceMessage]);
+    setChatHistory(prev => [...prev, voiceMessage]);
+    
+    try {
+      // Convert audio blob to base64
+      const arrayBuffer = await audioBlob.arrayBuffer();
+      const base64Audio = btoa(String.fromCharCode(...new Uint8Array(arrayBuffer)));
+      
+      const requestBody = {
+        contents: [{
+          parts: [{
+            inline_data: {
+              mime_type: "audio/wav",
+              data: base64Audio
+            }
+          }]
+        }],
+        generationConfig: {
+          temperature: 0.7,
+          topK: 40,
+          topP: 0.95,
+          maxOutputTokens: 1024,
+        },
+        systemInstruction: {
+          parts: [{
+            text: `You are Astrid, a friendly Norwegian language learning assistant. The user has sent you an audio message in Norwegian. Please:
+
+1. Transcribe what they said in Norwegian
+2. Provide helpful feedback on their pronunciation and grammar
+3. Respond in Norwegian with encouragement and corrections
+4. Keep responses conversational and supportive
+5. If you can't understand the audio, ask them to try again
+6. Sign your responses as "Astrid" when appropriate
+
+IMPORTANT: Use plain text only. Do NOT use any markdown formatting, asterisks, bold text, or special characters. Write in clean, simple Norwegian text that can be read aloud by text-to-speech without issues.`
+          }]
+        }
+      };
+
+      const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      const aiResponse = data.candidates?.[0]?.content?.parts?.[0]?.text || t('chat.errorProcessingAudio');
+
+      // Add AI response to chat
+      const aiMessage = {
+        id: Date.now() + 1,
+        type: 'ai',
+        content: aiResponse,
+        timestamp: new Date(),
+        isNorwegian: true
+      };
+
+      setMessages(prev => [...prev, aiMessage]);
+      setChatHistory(prev => [...prev, aiMessage]);
+
+      // Auto-speak the response if enabled
+      if (autoSpeak) {
+        speakMessage(aiResponse);
+      }
+
+    } catch (error) {
+      console.error('Error processing voice message:', error);
+      const errorMessage = {
+        id: Date.now() + 1,
+        type: 'ai',
+        content: t('chat.errorProcessingAudio'),
+        timestamp: new Date(),
+        isNorwegian: false
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Audio playback function for voice messages
+  const playVoiceMessage = async (audioUrl, messageId) => {
+    try {
+      // Check if user has interacted with the page
+      if (!hasUserInteracted) {
+        console.log('User has not interacted with the page yet, audio playback blocked');
+        const errorMessage = {
+          id: Date.now(),
+          type: 'ai',
+          content: 'Du må klikke på siden først for å spille av lydopptaket. Prøv igjen.',
+          timestamp: new Date(),
+          isNorwegian: true
+        };
+        setMessages(prev => [...prev, errorMessage]);
+        return;
+      }
+
+      // Stop any currently playing audio
+      if (currentAudioRef.current) {
+        currentAudioRef.current.pause();
+        currentAudioRef.current = null;
+      }
+      setPlayingAudioId(null);
+
+      // Create and configure the audio element
+      const audio = new Audio(audioUrl);
+      currentAudioRef.current = audio;
+      setPlayingAudioId(messageId);
+
+      // Set up event handlers
+      audio.onended = () => {
+        setPlayingAudioId(null);
+        currentAudioRef.current = null;
+      };
+
+      audio.onerror = (error) => {
+        setPlayingAudioId(null);
+        currentAudioRef.current = null;
+        console.error('Error playing audio:', error);
+      };
+
+      // Load the audio first
+      audio.load();
+      
+      // Wait for the audio to be ready
+      await new Promise((resolve, reject) => {
+        audio.oncanplaythrough = resolve;
+        audio.onerror = reject;
+        
+        // Timeout after 5 seconds
+        setTimeout(() => reject(new Error('Audio load timeout')), 5000);
+      });
+
+      // Play the audio
+      await audio.play();
+      
+    } catch (error) {
+      console.error('Error playing voice message:', error);
+      setPlayingAudioId(null);
+      currentAudioRef.current = null;
+      
+      // Show user-friendly error message based on error type
+      let errorContent = 'Beklager, jeg kunne ikke spille av lydopptaket. Prøv å klikke på knappen igjen.';
+      
+      if (error.name === 'NotAllowedError') {
+        errorContent = 'Lydopptak kan ikke spilles av uten brukerinteraksjon. Klikk på siden først.';
+      } else if (error.message === 'Audio load timeout') {
+        errorContent = 'Lydopptaket tok for lang tid å laste. Prøv igjen.';
+      }
+      
+      const errorMessage = {
+        id: Date.now(),
+        type: 'ai',
+        content: errorContent,
+        timestamp: new Date(),
+        isNorwegian: true
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    }
   };
 
   // Add event listeners for Norwegian word interactions after render
@@ -522,8 +827,8 @@ const Chat = () => {
               />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-gray-900">Norwegian AI Chat</h1>
-              <p className="text-sm text-gray-600">Practice Norwegian with AI assistance</p>
+              <h1 className="text-xl font-bold text-gray-900">{t('chat.title')}</h1>
+              <p className="text-sm text-gray-600">{t('chat.subtitle')}</p>
             </div>
           </div>
           
@@ -538,10 +843,10 @@ const Chat = () => {
               disabled={isSpeaking}
               title={
                 isSpeaking 
-                  ? 'Currently playing audio' 
+                  ? t('chat.speaking') 
                   : autoSpeak 
-                    ? 'Auto-speak enabled' 
-                    : 'Auto-speak disabled'
+                    ? t('chat.autoSpeak') + ' enabled' 
+                    : t('chat.autoSpeak') + ' disabled'
               }
             >
               {isSpeaking ? (
@@ -567,7 +872,7 @@ const Chat = () => {
       {/* Chat Messages */}
       <div 
         ref={chatContainerRef}
-        className="overflow-y-auto p-4 space-y-4 bg-gray-50 min-h-[400px] max-h-[600px]"
+        className="overflow-y-auto p-4 space-y-4 bg-gray-50 dark:bg-gray-900 min-h-[400px] max-h-[600px]"
       >
         {messages.map((message) => (
           <div
@@ -578,7 +883,7 @@ const Chat = () => {
               className={`max-w-xs lg:max-w-md px-4 py-3 rounded-lg shadow-sm ${
                 message.type === 'user'
                   ? 'bg-purple-600 text-white'
-                  : 'bg-white text-gray-900 border border-gray-200'
+                  : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700'
               }`}
             >
               {/* Message Header */}
@@ -590,7 +895,7 @@ const Chat = () => {
                     <Bot size={14} className="text-gray-500" />
                   )}
                   <span className="text-xs opacity-75">
-                    {message.type === 'user' ? 'You' : 'AI Assistant'}
+                    {message.type === 'user' ? 'You' : 'Astrid'}
                   </span>
                 </div>
                 <span className="text-xs opacity-75">
@@ -599,18 +904,43 @@ const Chat = () => {
               </div>
 
               {/* Message Content */}
-              <div 
-                className={`text-sm leading-relaxed ${
-                  message.type === 'ai' && message.isNorwegian
-                    ? 'norwegian-content'
-                    : ''
-                }`}
-                dangerouslySetInnerHTML={{
-                  __html: message.type === 'ai' && message.isNorwegian
-                    ? processTextWithTooltips(message.content)
-                    : message.content
-                }}
-              />
+              {message.isVoiceMessage ? (
+                <div className="flex items-center space-x-3">
+                  <button
+                    onClick={() => playVoiceMessage(message.audioUrl, message.id)}
+                    className={`flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors ${
+                      playingAudioId === message.id
+                        ? 'bg-white bg-opacity-20 text-white'
+                        : 'bg-white bg-opacity-10 hover:bg-opacity-20 text-white'
+                    }`}
+                  >
+                    {playingAudioId === message.id ? (
+                      <Pause size={16} />
+                    ) : (
+                      <Play size={16} />
+                    )}
+                    <span className="text-sm">
+                      {playingAudioId === message.id ? t('chat.playing') : t('chat.voiceMessage')}
+                    </span>
+                  </button>
+                  <span className="text-xs opacity-75">
+                    {playingAudioId === message.id ? '🎤' : '🎵'}
+                  </span>
+                </div>
+              ) : (
+                <div 
+                  className={`text-sm leading-relaxed ${
+                    message.type === 'ai' && message.isNorwegian
+                      ? 'norwegian-content'
+                      : ''
+                  }`}
+                  dangerouslySetInnerHTML={{
+                    __html: message.type === 'ai' && message.isNorwegian
+                      ? processTextWithTooltips(message.content)
+                      : message.content
+                  }}
+                />
+              )}
 
               {/* AI Message Actions */}
               {message.type === 'ai' && (
@@ -654,23 +984,51 @@ const Chat = () => {
       </div>
 
       {/* Input Area */}
-      <div className="bg-white border-t p-4">
+      <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 p-4">
         <div className="flex items-end space-x-3">
           <div className="flex-1">
             <textarea
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Skriv din melding på norsk her... (Write your message in Norwegian here...)"
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+              placeholder={t('chat.chatPlaceholder')}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg resize-none focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
               rows={2}
               disabled={isLoading}
             />
-            <p className="text-xs text-gray-500 mt-1">
-              Trykk Enter for å sende, Shift+Enter for ny linje
-            </p>
+            {isRecording && (
+              <p className="text-xs text-red-500 font-medium mt-1">
+                🎤 Recording... {Math.floor(recordingTime / 60)}:{(recordingTime % 60).toString().padStart(2, '0')}
+              </p>
+            )}
           </div>
           
+          {/* Voice Recording Button */}
+          <button
+            onClick={isRecording ? stopRecording : startRecording}
+            disabled={isLoading || !isVoiceSupported}
+            className={`p-3 rounded-lg transition-colors flex-shrink-0 ${
+              !isVoiceSupported
+                ? 'bg-gray-100 text-gray-400 cursor-not-allowed dark:bg-gray-700 dark:text-gray-500'
+                : isRecording 
+                  ? 'bg-red-500 text-white hover:bg-red-600 animate-pulse' 
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+            }`}
+            title={
+              !isVoiceSupported 
+                ? 'Voice recording not supported in this browser' 
+                : isRecording 
+                  ? t('chat.stopRecording') 
+                  : t('chat.startRecording')
+            }
+          >
+            {isRecording ? (
+              <MicOff size={20} />
+            ) : (
+              <Mic size={20} />
+            )}
+          </button>
+
           <button
             onClick={sendMessage}
             disabled={isLoading || !inputMessage.trim()}
@@ -708,11 +1066,12 @@ const Chat = () => {
       )}
 
       {/* Help Info */}
-      <div className="bg-blue-50 border-t border-blue-200 p-4">
-        <div className="text-sm text-blue-800">
+      <div className="bg-blue-50 dark:bg-blue-900/20 border-t border-blue-200 dark:border-blue-800 p-4">
+        <div className="text-sm text-blue-800 dark:text-blue-200">
           <p className="font-medium mb-1">💡 How to use Norwegian AI Chat</p>
           <ul className="text-xs space-y-1">
             <li>• <strong>Write in Norwegian</strong> to practice the language</li>
+            <li>• <strong>Record voice messages</strong> to practice Norwegian pronunciation (Chrome/Edge recommended)</li>
             <li>• <strong>Purple underlined words</strong> in AI responses are interactive</li>
             <li>• <strong>Hover over words</strong> to see pronunciation and add to vocabulary options</li>
             <li>• <strong>Toggle auto-speak</strong> to hear AI responses automatically</li>

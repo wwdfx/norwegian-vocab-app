@@ -9,6 +9,32 @@ const ServiceInitializer = () => {
     keyboardShortcutsService 
   } = useApp();
 
+  const requestMicrophonePermission = async () => {
+    // Check if microphone permission is already granted
+    if (navigator.permissions) {
+      try {
+        const result = await navigator.permissions.query({ name: 'microphone' });
+        if (result.state === 'granted') {
+          console.log('Microphone permission already granted');
+          return;
+        }
+      } catch (error) {
+        console.log('Permission API not supported');
+      }
+    }
+
+    // Request microphone permission with user-friendly message
+    try {
+      const stream = await navigator.getUserMedia({ audio: true });
+      console.log('Microphone permission granted');
+      // Stop the stream immediately as we only needed it for permission
+      stream.getTracks().forEach(track => track.stop());
+    } catch (error) {
+      console.log('Microphone permission not granted or not requested');
+      // Don't show error - user can grant permission later in settings
+    }
+  };
+
   useEffect(() => {
     // Initialize offline service
     offlineService.loadOfflineQueue();
@@ -18,6 +44,9 @@ const ServiceInitializer = () => {
     
     // Initialize keyboard shortcuts
     keyboardShortcutsService.enable();
+    
+    // Request microphone permission for voice input
+    requestMicrophonePermission();
     
     // Show welcome message with shortcuts hint
     const showWelcomeHint = () => {

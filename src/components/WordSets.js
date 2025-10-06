@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../context/AppContext';
 import { 
   Download, 
@@ -17,7 +18,17 @@ import ttsService from '../services/tts';
 import { getAllWordSets } from '../data/wordSets';
 
 const WordSets = ({ onBack }) => {
+  const { t } = useTranslation();
   const { words, addWord } = useApp();
+  
+  // Function to get localized word set info
+  const getLocalizedWordSet = (wordSet) => {
+    return {
+      ...wordSet,
+      name: t(`wordSets.categories.${wordSet.id}.name`, wordSet.name),
+      description: t(`wordSets.categories.${wordSet.id}.description`, wordSet.description)
+    };
+  };
   const [selectedSet, setSelectedSet] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [importingWords, setImportingWords] = useState(new Set());
@@ -25,10 +36,11 @@ const WordSets = ({ onBack }) => {
   const wordSets = getAllWordSets();
 
   // Filter word sets based on search term
-  const filteredWordSets = wordSets.filter(set => 
-    set.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    set.description.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredWordSets = wordSets.filter(set => {
+    const localizedSet = getLocalizedWordSet(set);
+    return localizedSet.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           localizedSet.description.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   // Check if a word is already in user's vocabulary
   const isWordInVocabulary = (norwegianWord) => {
@@ -101,7 +113,7 @@ const WordSets = ({ onBack }) => {
                 className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
               >
                 <ArrowLeft size={20} />
-                <span>Back to Word Sets</span>
+                <span>{t('app.back')} {t('wordSets.title')}</span>
               </button>
             </div>
             <div className="text-right">
@@ -115,7 +127,7 @@ const WordSets = ({ onBack }) => {
         <div className="bg-gradient-to-r from-purple-50 to-blue-50 border-b border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h2 className="text-lg font-semibold text-gray-900 mb-2">Progress</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-2">{t('dashboard.progressOverview')}</h2>
               <div className="flex items-center space-x-4">
                 <div className="flex items-center space-x-2 text-green-600">
                   <CheckCircle size={20} />
@@ -123,7 +135,7 @@ const WordSets = ({ onBack }) => {
                 </div>
                 <div className="flex items-center space-x-2 text-gray-600">
                   <BookOpen size={20} />
-                  <span>{progress.totalWords} total words</span>
+                  <span>{progress.totalWords} {t('wordSets.words')}</span>
                 </div>
               </div>
             </div>
@@ -154,7 +166,7 @@ const WordSets = ({ onBack }) => {
                   className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
                 >
                   <Download size={20} />
-                  <span>Import All ({wordsToImport.length} words)</span>
+                  <span>{t('wordSets.importAll')} ({wordsToImport.length} {t('wordSets.words')})</span>
                 </button>
               )}
               {progress.percentage === 100 && (
@@ -256,8 +268,8 @@ const WordSets = ({ onBack }) => {
             )}
           </div>
           <div className="text-right">
-            <h1 className="text-3xl font-bold text-gray-900">Predefined Word Sets</h1>
-            <p className="text-gray-600">Import curated vocabulary collections</p>
+            <h1 className="text-3xl font-bold text-gray-900">{t('wordSets.title')}</h1>
+            <p className="text-gray-600">{t('wordSets.selectSet')}</p>
           </div>
         </div>
       </div>
@@ -268,7 +280,7 @@ const WordSets = ({ onBack }) => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
           <input
             type="text"
-            placeholder="Search word sets..."
+            placeholder={t('search.searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
@@ -280,6 +292,7 @@ const WordSets = ({ onBack }) => {
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredWordSets.map((wordSet) => {
+            const localizedSet = getLocalizedWordSet(wordSet);
             const progress = getSetProgress(wordSet);
             const wordsToImport = wordSet.words.filter(word => !isWordInVocabulary(word.norwegian));
             
@@ -294,10 +307,10 @@ const WordSets = ({ onBack }) => {
                     <div className="text-3xl">{wordSet.icon}</div>
                     <div>
                       <h3 className="text-xl font-semibold text-gray-900 group-hover:text-purple-600 transition-colors">
-                        {wordSet.name}
+                        {localizedSet.name}
                       </h3>
                       <p className="text-gray-600 text-sm mt-1">
-                        {wordSet.words.length} words
+                        {wordSet.words.length} {t('wordSets.words')}
                       </p>
                     </div>
                   </div>
@@ -314,7 +327,7 @@ const WordSets = ({ onBack }) => {
                 </div>
 
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {wordSet.description}
+                  {localizedSet.description}
                 </p>
 
                 {/* Progress */}
@@ -341,7 +354,7 @@ const WordSets = ({ onBack }) => {
                   </div>
                   <div className="flex items-center space-x-1">
                     <Clock size={14} className="text-orange-500" />
-                    <span>{wordsToImport.length} available</span>
+                    <span>{wordsToImport.length} {t('wordSets.available')}</span>
                   </div>
                 </div>
 
@@ -356,7 +369,7 @@ const WordSets = ({ onBack }) => {
                         }}
                         className="flex-1 bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors text-sm font-medium"
                       >
-                        Import All
+{t('wordSets.importAll')}
                       </button>
                     )}
                     <button
@@ -366,7 +379,7 @@ const WordSets = ({ onBack }) => {
                       }}
                       className="flex-1 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors text-sm font-medium"
                     >
-                      View Details
+{t('wordSets.viewDetails')}
                     </button>
                   </div>
                 </div>

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { X, Volume2, ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react';
 import ttsService from '../services/tts';
 
 const Alphabet = () => {
+  const { t } = useTranslation();
   const [selectedLetter, setSelectedLetter] = useState(null);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
@@ -373,7 +375,7 @@ const Alphabet = () => {
                 className="flex items-center space-x-2 text-gray-600 hover:text-gray-800 transition-colors"
               >
                 <X size={20} />
-                <span>Close</span>
+{t('app.close')}
               </button>
               
               <div className="flex items-center space-x-2">
@@ -416,7 +418,7 @@ const Alphabet = () => {
             {/* Examples */}
             <div className="space-y-4">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">
-                Examples
+                {t('alphabet.examples')}
               </h3>
               {selectedLetter.examples.map((example, index) => (
                 <div key={index} className="bg-gray-50 rounded-lg p-4">
@@ -465,11 +467,10 @@ const Alphabet = () => {
       {/* Header */}
       <div className="text-center mb-8">
         <h1 className="text-3xl font-bold text-gray-900 mb-4">
-          Norwegian Alphabet
+          {t('alphabet.title')}
         </h1>
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-          Learn the Norwegian alphabet with pronunciation, examples, and interactive cards. 
-          Click on any letter to explore its pronunciation and usage.
+          {t('alphabet.subtitle')}
         </p>
       </div>
 
@@ -494,7 +495,7 @@ const Alphabet = () => {
       {/* Special Norwegian Letters */}
       <div className="bg-purple-50 border border-purple-200 rounded-lg p-6 mb-8">
         <h2 className="text-xl font-semibold text-purple-800 mb-4">
-          Special Norwegian Letters
+          {t('alphabet.specialLetters')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="text-center">
@@ -521,7 +522,7 @@ const Alphabet = () => {
       {/* Learning Tips */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
         <h2 className="text-xl font-semibold text-blue-800 mb-4">
-          💡 Learning Tips
+          💡 {t('alphabet.learningTips')}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-blue-700">
           <ul className="space-y-2">

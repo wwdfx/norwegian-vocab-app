@@ -10,8 +10,10 @@ import Practice from './components/Practice';
 import WordManagement from './components/WordManagement';
 import News from './components/News';
 import Chat from './components/Chat';
-import LearningPathway from './components/LearningPathway';
+import Exercises from './components/Exercises';
 import Alphabet from './components/Alphabet';
+import Grammar from './components/Grammar';
+import Settings from './components/Settings';
 import ServiceInitializer from './components/ServiceInitializer';
 import PWAServiceWorker from './components/PWAServiceWorker';
 
@@ -43,13 +45,17 @@ function AppContent() {
       case 'words':
         return <WordManagement />;
       case 'learning':
-        return <LearningPathway />;
+        return <Exercises />;
       case 'alphabet':
         return <Alphabet />;
+      case 'grammar':
+        return <Grammar />;
       case 'news':
         return <News />;
       case 'chat':
         return <Chat />;
+      case 'settings':
+        return <Settings />;
       default:
         return <Dashboard />;
     }

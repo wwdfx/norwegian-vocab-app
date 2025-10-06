@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useApp } from '../context/AppContext';
 import { CheckCircle, XCircle } from 'lucide-react';
 import WordTooltip from './WordTooltip';
 
 const Practice = () => {
+  const { t } = useTranslation();
   const { words, updateWordProgress } = useApp();
   const [practiceWords, setPracticeWords] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -156,20 +158,20 @@ const Practice = () => {
               />
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Practice Mode</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('practice.title')}</h2>
           <p className="text-gray-600 mb-6">
-            Test your knowledge with multiple-choice questions. Words are selected based on spaced repetition.
+            {t('practice.description')}
           </p>
           {practiceWords.length === 0 ? (
             <div className="text-gray-500">
-              <p>No words need review right now. Great job!</p>
+              <p>{t('practice.noWordsToReview')}</p>
             </div>
           ) : (
             <button
               onClick={startPractice}
               className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 transform hover:-translate-y-1 transition-all duration-200"
             >
-              Start Practice ({practiceWords.length} words)
+{t('practice.startPractice')} ({practiceWords.length} {t('practice.words')})
             </button>
           )}
         </div>
@@ -193,18 +195,18 @@ const Practice = () => {
             </div>
           </div>
           <div className="text-6xl mb-4">🎯</div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">Practice Complete!</h2>
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">{t('practice.practiceComplete')}</h2>
           <div className="mb-6">
             <div className="text-4xl font-bold text-purple-600 mb-2">{percentage}%</div>
             <p className="text-gray-600">
-              You got {score.correct} out of {score.total} questions correct!
+{t('practice.scoreMessage', { correct: score.correct, total: score.total })}
             </p>
           </div>
           <button
             onClick={resetSession}
             className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-8 py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-blue-700 transform hover:-translate-y-1 transition-all duration-200"
           >
-            Practice Again
+{t('practice.practiceAgain')}
           </button>
         </div>
       </div>
@@ -219,8 +221,8 @@ const Practice = () => {
       <div className="max-w-2xl mx-auto">
         <div className="bg-white rounded-xl shadow-sm p-8 text-center">
           <div className="text-4xl mb-4">⏳</div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Loading...</h3>
-          <p className="text-gray-600">Preparing your practice session...</p>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">{t('practice.loading')}</h3>
+          <p className="text-gray-600">{t('practice.preparingSession')}</p>
         </div>
       </div>
     );
@@ -231,8 +233,8 @@ const Practice = () => {
       {/* Progress */}
       <div className="mb-6">
         <div className="flex justify-between text-sm text-gray-600 mb-2">
-          <span>Question {currentIndex + 1} of {practiceWords.length}</span>
-          <span>Score: {score.correct}/{score.total}</span>
+          <span>{t('practice.questionProgress', { current: currentIndex + 1, total: practiceWords.length })}</span>
+          <span>{t('practice.score')}: {score.correct}/{score.total}</span>
         </div>
         <div className="w-full bg-gray-200 rounded-full h-2">
           <div 
@@ -245,7 +247,7 @@ const Practice = () => {
       {/* Question */}
       <div className="bg-white rounded-xl shadow-sm p-8 mb-6">
         <h3 className="text-xl font-semibold text-gray-900 mb-6 text-center">
-          What does "
+{t('practice.questionPrefix')} "
           <WordTooltip 
             norwegianWord={currentWord?.norwegian}
             englishTranslation={currentWord?.english}
@@ -254,7 +256,7 @@ const Practice = () => {
           >
             <span className="text-purple-600 font-bold cursor-help hover:text-purple-700 transition-colors">{currentWord?.norwegian}</span>
           </WordTooltip>
-          " mean?
+          " {t('practice.questionSuffix')}?
         </h3>
         
         <div className="space-y-3">
@@ -300,12 +302,12 @@ const Practice = () => {
             {currentAnswerCorrect ? (
               <>
                 <CheckCircle className="text-green-500" size={24} />
-                <span className="text-green-600 font-semibold">Correct!</span>
+                <span className="text-green-600 font-semibold">{t('practice.correct')}</span>
               </>
             ) : (
               <>
                 <XCircle className="text-red-500" size={24} />
-                <span className="text-red-600 font-semibold">Incorrect</span>
+                <span className="text-red-600 font-semibold">{t('practice.incorrect')}</span>
               </>
             )}
           </div>
@@ -317,7 +319,7 @@ const Practice = () => {
           )}
           
           <p className="text-sm text-gray-500">
-            {currentAnswerCorrect ? 'Great job!' : 'This word will be added back to practice.'}
+{currentAnswerCorrect ? t('practice.greatJob') : t('practice.wordAddedBack')}
           </p>
         </div>
       )}
