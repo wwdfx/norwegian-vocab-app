@@ -11,6 +11,7 @@ import WordManagement from './components/WordManagement';
 import News from './components/News';
 import Chat from './components/Chat';
 import Exercises from './components/Exercises';
+import Lesson from './components/Lesson';
 import Alphabet from './components/Alphabet';
 import Grammar from './components/Grammar';
 import Settings from './components/Settings';
@@ -45,7 +46,7 @@ function AppContent() {
       case 'words':
         return <WordManagement />;
       case 'learning':
-        return <Exercises />;
+        return <Lesson />;
       case 'alphabet':
         return <Alphabet />;
       case 'grammar':

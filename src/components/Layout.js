@@ -33,7 +33,7 @@ const Layout = ({ children }) => {
       id: 'learning',
       title: t('navigation.learning'),
       items: [
-        { id: 'learning', label: t('navigation.exercises'), icon: GraduationCap },
+            { id: 'learning', label: t('navigation.lessons'), icon: GraduationCap },
         { id: 'alphabet', label: t('navigation.alphabet'), icon: Type },
         { id: 'grammar', label: t('navigation.grammar'), icon: BookOpen }
       ]

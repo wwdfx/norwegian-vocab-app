@@ -1,0 +1,45 @@
+// Lesson 3: [Under Construction]
+import lesson3Vocabulary from './lesson3_vocabulary.js';
+
+export const lesson3 = {
+  id: "lesson3",
+  title: "3. [Under Construction]",
+  subtitle: "This lesson is currently being developed",
+  level: 3,
+  xp_reward: 150,
+  isUnderConstruction: true,
+  audio: "/src/media/lesson3/audio_placeholder.mp3",
+  duration: "0:00",
+  
+  media: {
+    portrait: "/src/media/lesson3/pic1.jpg",
+    landscape: "/src/media/lesson3/pic2.jpg"
+  },
+
+  introduction: {
+    norwegian: "[Content coming soon]",
+    english: "[Content coming soon]"
+  },
+
+  dialogues: {},
+  vocabulary: lesson3Vocabulary,
+  numerals: [],
+  extras_content: {},
+  
+  sections: {
+    vocabulary: {
+      id: "vocabulary", 
+      title: "Vocabulary",
+      type: "content",
+      content: "vocabulary"
+    }
+  },
+
+  pronunciation_content: {},
+  listening_content: { exercises: [] },
+  grammar_content: {},
+  exercise_content: {}
+};
+
+export default lesson3;
+
