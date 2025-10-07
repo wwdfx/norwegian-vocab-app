@@ -821,7 +821,7 @@ IMPORTANT: Use plain text only. Do NOT use any markdown formatting, asterisks, b
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10">
               <img 
-                src="/Logo.png" 
+                src={`${process.env.PUBLIC_URL}/Logo.png`}
                 alt="NorLearn Logo" 
                 className="w-full h-full object-contain"
               />

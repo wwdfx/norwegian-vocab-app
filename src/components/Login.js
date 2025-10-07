@@ -21,7 +21,7 @@ const Login = () => {
             <div className="flex flex-col items-center">
               <div className="w-24 h-24 mb-4">
                 <img 
-                  src="/Logo.png" 
+                  src={`${process.env.PUBLIC_URL}/Logo.png`}
                   alt="NorLearn Logo" 
                   className="w-full h-full object-contain"
                 />

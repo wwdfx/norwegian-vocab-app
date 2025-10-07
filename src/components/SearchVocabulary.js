@@ -418,7 +418,7 @@ const SearchVocabulary = () => {
         <div className="flex justify-center mb-4">
           <div className="w-16 h-16">
             <img 
-              src="/Logo.png" 
+              src={`${process.env.PUBLIC_URL}/Logo.png`}
               alt="NorLearn Logo" 
               className="w-full h-full object-contain"
             />

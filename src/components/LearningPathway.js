@@ -130,7 +130,7 @@ const LearningPathway = () => {
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 bg-white rounded-full p-2">
               <img 
-                src="/Logo.png" 
+                src={`${process.env.PUBLIC_URL}/Logo.png`}
                 alt="NorLearn Logo" 
                 className="w-full h-full object-contain"
               />

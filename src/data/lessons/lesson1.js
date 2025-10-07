@@ -7,13 +7,13 @@ export const lesson1 = {
   subtitle: "introducing oneself, making simple statements and questions, making simple negative statements, numbers",
   level: 1,
   xp_reward: 100,
-  audio: "/src/media/lesson1/1ken.mp3",
+  audio: `${process.env.PUBLIC_URL}/media/lesson1/1ken.mp3`,
   duration: "0:42",
   
   // Media assets
   media: {
-    portrait: "/src/media/lesson1/pic1.jpg",
-    landscape: "/src/media/lesson1/pic2.jpg"
+    portrait: `${process.env.PUBLIC_URL}/media/lesson1/pic1.jpg`,
+    landscape: `${process.env.PUBLIC_URL}/media/lesson1/pic2.jpg`
   },
 
   // Introduction text
@@ -28,7 +28,7 @@ export const lesson1 = {
     ken_monika: {
       id: "ken_monika",
       title: "Ken & Monika",
-      audio: "/src/media/lesson1/1ken.mp3",
+      audio: `${process.env.PUBLIC_URL}/media/lesson1/1ken.mp3`,
       duration: "0:42",
       introduction: {
         norwegian: "Ken Robbins kommer fra England. Han bor i London. Ken er 23 år gammel. Han reiser med tog fra Oslo til Trondheim. Ken snakker med ei dame. Hun kommer fra Norge.",
@@ -95,7 +95,7 @@ export const lesson1 = {
     anna_lars: {
       id: "anna_lars",
       title: "Anna & Lars",
-      audio: "/src/media/lesson1/1anna.mp3",
+      audio: `${process.env.PUBLIC_URL}/media/lesson1/1anna.mp3`,
       duration: "0:45",
       introduction: {
         norwegian: "Anna Valente kommer fra Italia. Hun bor i Roma. Anna er 22 år gammel. Hun reiser med fly fra Roma til Trondheim. Lars er norsk. Han reiser også med fly fra Roma.",
@@ -168,7 +168,7 @@ export const lesson1 = {
     maria_lisa: {
       id: "maria_lisa",
       title: "Maria & Lisa",
-      audio: "/src/media/lesson1/1maria.mp3",
+      audio: `${process.env.PUBLIC_URL}/media/lesson1/1maria.mp3`,
       duration: "0:50",
       introduction: {
         norwegian: "Maria Gomez kommer fra Spania. Hun bor i Barcelona. Maria er 19 år gammel. Hun reiser med båt fra Bergen til Trondheim. Den heter Polarlys. Lisa er også på Polarlys. Hun er turist.",
@@ -283,7 +283,7 @@ export const lesson1 = {
     peter_frank: {
       id: "peter_frank",
       title: "Peter & Frank",
-      audio: "/src/media/lesson1/1peter.mp3",
+      audio: `${process.env.PUBLIC_URL}/media/lesson1/1peter.mp3`,
       duration: "1:00",
       introduction: {
         norwegian: "Peter Maier kommer fra Tyskland. Han bor i Hamburg og er 25 år. Han reiser til Trondheim med bil. Peter reiser sammen med Frank. Frank er også tysk. De stopper på en bensinstasjon.",
@@ -750,7 +750,7 @@ export const lesson1 = {
         title: "Exercise 1: Ken - Listen and write",
         description: "Listen to the audio and fill in the missing words in the text about Ken Robbins.",
         type: "fill_blanks_listening",
-        audio_path: "./src/media/lesson1/1ken_ex.mp3",
+        audio_path: `${process.env.PUBLIC_URL}/media/lesson1/1ken_ex.mp3`,
         text: "Ken Robbins __ fra England. __ __ i London. Ken __ 23 år gammel. __ __ med tog __ Oslo __ Trondheim. Ken __ __ ei dame. __ __ __ __.",
         answers: [
           { blank: 0, correct: "kommer", position: "Ken Robbins __ fra England." },
@@ -774,7 +774,7 @@ export const lesson1 = {
         title: "Exercise 2: Maria - Listen quiz",
         description: "Listen to the text and choose the right answers.",
         type: "multiple_choice_listening",
-        audio_path: "./src/media/lesson1/1maria_ex.mp3",
+        audio_path: `${process.env.PUBLIC_URL}/media/lesson1/1maria_ex.mp3`,
         questions: [
           {
             question: "Hvor kommer Maria fra?",
