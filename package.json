@@ -1,6 +1,7 @@
 {
   "name": "norwegian-vocab-app",
   "version": "0.1.0",
+  "homepage": "https://wwdfx.github.io/norwegian-vocab-app",
   "private": true,
   "dependencies": {
     "@capacitor/android": "^7.4.3",
@@ -25,7 +26,9 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "pwa-icons": "node create-pwa-icons.js",
-    "build-pwa": "npm run pwa-icons && npm run build"
+    "build-pwa": "npm run pwa-icons && npm run build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [
@@ -47,6 +50,7 @@
   },
   "devDependencies": {
     "autoprefixer": "^10.4.21",
+    "gh-pages": "^6.3.0",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.17"
   }
