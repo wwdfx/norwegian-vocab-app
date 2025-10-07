@@ -1,0 +1,102 @@
+{
+  "name": "NorLearn - Norwegian Vocabulary Learning",
+  "short_name": "NorLearn",
+  "description": "Learn Norwegian vocabulary with flashcards, AI chat, news reading, and interactive tools",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#7c3aed",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["education", "lifestyle", "productivity"],
+  "icons": [
+    {
+      "src": "/Logo.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Start Flashcards",
+      "short_name": "Flashcards",
+      "description": "Begin a flashcard study session",
+      "url": "/?screen=flashcards",
+      "icons": [
+        {
+          "src": "/Logo.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "Practice Mode",
+      "short_name": "Practice",
+      "description": "Start vocabulary practice",
+      "url": "/?screen=practice",
+      "icons": [
+        {
+          "src": "/Logo.png",
+          "sizes": "96x96"
+        }
+      ]
+    },
+    {
+      "name": "AI Chat",
+      "short_name": "Chat",
+      "description": "Practice Norwegian with AI",
+      "url": "/?screen=chat",
+      "icons": [
+        {
+          "src": "/Logo.png",
+          "sizes": "96x96"
+        }
+      ]
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-wide.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshot-narrow.png",
+      "sizes": "750x1334",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "prefer_related_applications": false,
+  "edge_side_panel": {
+    "preferred_width": 400
+  }
+}
