@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/norwegian-vocab-app/static/css/main.417e9527.css",
-    "main.js": "/norwegian-vocab-app/static/js/main.ba953b3c.js",
+    "main.js": "/norwegian-vocab-app/static/js/main.acc85894.js",
     "static/js/453.1ccf1e41.chunk.js": "/norwegian-vocab-app/static/js/453.1ccf1e41.chunk.js",
     "index.html": "/norwegian-vocab-app/index.html",
     "main.417e9527.css.map": "/norwegian-vocab-app/static/css/main.417e9527.css.map",
-    "main.ba953b3c.js.map": "/norwegian-vocab-app/static/js/main.ba953b3c.js.map",
+    "main.acc85894.js.map": "/norwegian-vocab-app/static/js/main.acc85894.js.map",
     "453.1ccf1e41.chunk.js.map": "/norwegian-vocab-app/static/js/453.1ccf1e41.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.417e9527.css",
-    "static/js/main.ba953b3c.js"
+    "static/js/main.acc85894.js"
   ]
 }
