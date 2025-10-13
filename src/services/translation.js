@@ -41,6 +41,47 @@ class TranslationService {
     }
   }
 
+  // Translate English word to Ukrainian using Google Cloud Translation API
+  async translateEnglishToUkrainian(englishWord) {
+    console.log(`TranslationService: Translating "${englishWord}" from English to Ukrainian`);
+    
+    try {
+      const response = await fetch(
+        `https://translation.googleapis.com/language/translate/v2?key=${this.translationApiKey}`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            q: englishWord,
+            source: 'en', // English
+            target: 'uk', // Ukrainian
+            format: 'text'
+          })
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error(`Translation API error: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log(`TranslationService: API response for "${englishWord}":`, data);
+      
+      if (data.data && data.data.translations && data.data.translations.length > 0) {
+        const result = data.data.translations[0].translatedText;
+        console.log(`TranslationService: Final translation for "${englishWord}": "${result}"`);
+        return result;
+      }
+      
+      throw new Error('No translation found');
+    } catch (error) {
+      console.error('Translation error:', error);
+      throw error;
+    }
+  }
+
   // Generate Norwegian example sentence using Gemini API
   async generateNorwegianExample(norwegianWord) {
     try {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Volume2, X } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import ttsService from '../services/tts';
 import translationService from '../services/translation';
 
@@ -11,10 +12,13 @@ const WordTooltip = ({
   className = "",
   position = "top" 
 }) => {
+  const { i18n } = useTranslation();
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipData, setTooltipData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [ukrainianTranslation, setUkrainianTranslation] = useState(null);
+  const [isTranslating, setIsTranslating] = useState(false);
   const timeoutRef = useRef(null);
   const tooltipRef = useRef(null);
 
@@ -100,6 +104,27 @@ const WordTooltip = ({
     };
   }, []);
 
+  // Translate English to Ukrainian when language is Ukrainian
+  useEffect(() => {
+    const translateToUkrainian = async () => {
+      if (i18n.language === 'uk' && englishTranslation && !ukrainianTranslation && !isTranslating) {
+        setIsTranslating(true);
+        try {
+          const ukrainian = await translationService.translateEnglishToUkrainian(englishTranslation);
+          setUkrainianTranslation(ukrainian);
+        } catch (error) {
+          console.error('Error translating to Ukrainian:', error);
+          // Fallback to English if translation fails
+          setUkrainianTranslation(englishTranslation);
+        } finally {
+          setIsTranslating(false);
+        }
+      }
+    };
+
+    translateToUkrainian();
+  }, [i18n.language, englishTranslation, ukrainianTranslation, isTranslating]);
+
   // Close tooltip when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -164,7 +189,13 @@ const WordTooltip = ({
             <div className="text-center">
               <p className="text-sm text-gray-600 mb-1">Translation</p>
               <p className="text-base font-medium text-gray-900">
-                {isLoading ? 'Loading...' : tooltipData?.english}
+                {isLoading ? 'Loading...' : (
+                  i18n.language === 'uk' ? (
+                    ukrainianTranslation || (isTranslating ? 'Translating...' : tooltipData?.english)
+                  ) : (
+                    tooltipData?.english
+                  )
+                )}
               </p>
             </div>
             

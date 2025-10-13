@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useApp } from '../context/AppContext';
 import ttsService from '../services/tts';
@@ -8,7 +8,7 @@ import WordTooltip from './WordTooltip';
 import WordSets from './WordSets';
 
 const WordManagement = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { words, addWord, deleteWord, isLoading } = useApp();
   const [activeTab, setActiveTab] = useState('my-words'); // 'my-words' or 'word-sets'
   const [showAddForm, setShowAddForm] = useState(false);
@@ -21,9 +21,76 @@ const WordManagement = () => {
   const [autoFillError, setAutoFillError] = useState('');
   const [importError, setImportError] = useState('');
   const [importSuccess, setImportSuccess] = useState('');
+  const [ukrainianTranslations, setUkrainianTranslations] = useState({});
+  const [translatingWords, setTranslatingWords] = useState(new Set());
 
   // Mobile detection utility
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+  // Clear Ukrainian translations cache when language changes
+  useEffect(() => {
+    setUkrainianTranslations({});
+    setTranslatingWords(new Set());
+  }, [i18n.language]);
+
+  // Translate English words to Ukrainian when app language is Ukrainian
+  const translateToUkrainian = async (englishWord, wordId) => {
+    const cacheKey = `${wordId}_${englishWord}`;
+    console.log(`Translating "${englishWord}" (ID: ${wordId}) to Ukrainian with cache key: ${cacheKey}`);
+    
+    if (ukrainianTranslations[cacheKey] || translatingWords.has(cacheKey)) {
+      console.log(`Word ${cacheKey} already translated or currently translating`);
+      return; // Already translated or currently translating
+    }
+
+    try {
+      setTranslatingWords(prev => new Set(prev).add(cacheKey));
+      const ukrainianTranslation = await translationService.translateEnglishToUkrainian(englishWord);
+      console.log(`Translation result for "${englishWord}": "${ukrainianTranslation}"`);
+      
+      setUkrainianTranslations(prev => ({
+        ...prev,
+        [cacheKey]: ukrainianTranslation
+      }));
+    } catch (error) {
+      console.error('Error translating to Ukrainian:', error);
+      // Fallback to English if translation fails
+      setUkrainianTranslations(prev => ({
+        ...prev,
+        [cacheKey]: englishWord
+      }));
+    } finally {
+      setTranslatingWords(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(cacheKey);
+        return newSet;
+      });
+    }
+  };
+
+  // Get the appropriate translation based on current language
+  const getTranslation = (word) => {
+    const isUkrainian = i18n.language === 'uk';
+    const cacheKey = `${word.id}_${word.english}`;
+    
+    if (isUkrainian) {
+      // If we have Ukrainian translation, use it
+      if (ukrainianTranslations[cacheKey]) {
+        console.log(`Using cached translation for "${word.english}": "${ukrainianTranslations[cacheKey]}"`);
+        return ukrainianTranslations[cacheKey];
+      }
+      // If we're not currently translating, start the translation
+      if (!translatingWords.has(cacheKey)) {
+        translateToUkrainian(word.english, word.id);
+      }
+      // Return English as fallback while translating
+      console.log(`Returning English fallback for "${word.english}" (ID: ${word.id})`);
+      return word.english;
+    }
+    
+    // Return English for non-Ukrainian languages
+    return word.english;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -671,7 +738,10 @@ const WordManagement = () => {
                     </button>
                   </div>
                   <p className="text-gray-700 text-base sm:text-lg mb-1">
-                    {word.english}
+                    {getTranslation(word)}
+                    {translatingWords.has(word.id) && (
+                      <span className="ml-2 text-xs text-gray-400">Translating...</span>
+                    )}
                   </p>
                   {word.example && (
                     <p className="text-gray-500 italic text-sm sm:text-base break-words">
