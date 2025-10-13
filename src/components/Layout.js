@@ -114,8 +114,9 @@ const Layout = ({ children }) => {
         lg:relative lg:translate-x-0 lg:z-auto
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
         transition-transform duration-300 ease-in-out
+        max-h-screen overflow-hidden
       `}>
-        <div className="flex flex-col flex-grow">
+        <div className="flex flex-col flex-grow min-h-0">
           {/* Logo and Welcome */}
           <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center space-x-3">
@@ -147,7 +148,7 @@ const Layout = ({ children }) => {
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-4 overflow-y-auto">
+          <nav className="flex-1 px-4 py-6 space-y-4 overflow-y-auto min-h-0 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
             {navigationSections.map((section) => (
               <div key={section.id} className="space-y-2">
                 {/* Section Header */}

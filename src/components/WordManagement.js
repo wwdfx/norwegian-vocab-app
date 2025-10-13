@@ -36,17 +36,14 @@ const WordManagement = () => {
   // Translate English words to Ukrainian when app language is Ukrainian
   const translateToUkrainian = async (englishWord, wordId) => {
     const cacheKey = `${wordId}_${englishWord}`;
-    console.log(`Translating "${englishWord}" (ID: ${wordId}) to Ukrainian with cache key: ${cacheKey}`);
     
     if (ukrainianTranslations[cacheKey] || translatingWords.has(cacheKey)) {
-      console.log(`Word ${cacheKey} already translated or currently translating`);
       return; // Already translated or currently translating
     }
 
     try {
       setTranslatingWords(prev => new Set(prev).add(cacheKey));
       const ukrainianTranslation = await translationService.translateEnglishToUkrainian(englishWord);
-      console.log(`Translation result for "${englishWord}": "${ukrainianTranslation}"`);
       
       setUkrainianTranslations(prev => ({
         ...prev,
